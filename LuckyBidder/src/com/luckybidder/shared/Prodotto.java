@@ -5,6 +5,7 @@ import java.util.Date;
 public class Prodotto {
 	
 	private int idProdotto;
+	private String nomeProdotto;
 	private String descrizione;
 	private double baseAsta;
 	private Date dataScadenza;
@@ -64,6 +65,14 @@ public class Prodotto {
 
 	public void setVincitore(String vincitore) {
 		this.vincitore = vincitore;
+	}
+
+	public String getNomeProdotto() {
+		return nomeProdotto;
+	}
+
+	public void setNomeProdotto(String nomeProdotto) {
+		this.nomeProdotto = nomeProdotto;
 	}
 	
 	

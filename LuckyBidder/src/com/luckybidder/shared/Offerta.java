@@ -6,6 +6,7 @@ public class Offerta {
 
 	private double importo;
 	private Date dataOfferta;
+	private Prodotto prodotto;
 	
 	public Offerta() {
 		
@@ -25,5 +26,13 @@ public class Offerta {
 
 	public void setDataOfferta(Date dataOfferta) {
 		this.dataOfferta = dataOfferta;
+	}
+
+	public Prodotto getProdotto() {
+		return prodotto;
+	}
+
+	public void setProdotto(Prodotto prodotto) {
+		this.prodotto = prodotto;
 	}
 }

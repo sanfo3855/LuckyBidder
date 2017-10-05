@@ -122,6 +122,7 @@ public class Registrazione extends HorizontalPanel{
 		
 		//CODICE FISCALE
 		//mancante
+		//pietro
 		/*Label labelIndirizzo = new Label("Indirizzo ");
 		tIndirizzo = new TextBox();
 		tIndirizzo.setWidth("150px");

@@ -234,7 +234,7 @@ public class Registrazione extends HorizontalPanel{
 								popup.center();
 							} else if (result==false) {
 								PopupPanel popup = new PopupPanel(true);
-								popup.setWidget(new HTML("Registrazione fallita, username "+ username +" già esistente!"));
+								popup.setWidget(new HTML("<font color='Red'>Registrazione fallita, username "+ username +" già esistente!</font>"));
 								popup.center();
 							}
 							
@@ -253,7 +253,7 @@ public class Registrazione extends HorizontalPanel{
 		
 		
 		decoratorpanelgrid.add(verticalpanel);
-		decoratorpanelgrid.getElement().setAttribute("style", "margin-left: 35vw");
+		decoratorpanelgrid.getElement().setAttribute("style", "margin-left: 39vw; margin-top: 10vh;");
 		this.add(decoratorpanelgrid);
 	}
 }

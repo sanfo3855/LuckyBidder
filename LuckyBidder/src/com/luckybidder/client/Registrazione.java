@@ -121,6 +121,7 @@ public class Registrazione extends HorizontalPanel{
 		grid.setWidget(7, 2, requiredIndirizzo);
 		
 		//CODICE FISCALE
+		//mancante
 		/*Label labelIndirizzo = new Label("Indirizzo ");
 		tIndirizzo = new TextBox();
 		tIndirizzo.setWidth("150px");

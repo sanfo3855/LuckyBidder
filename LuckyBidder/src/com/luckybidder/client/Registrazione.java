@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.datepicker.client.DateBox;
@@ -251,6 +252,16 @@ public class Registrazione extends HorizontalPanel{
 			}
 		});		
 		
+		bReturnLogin.addClickHandler( new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				Login login = new Login();
+				RootPanel.get().clear();
+				RootPanel.get().add(login);
+			}
+			
+		});
 		
 		decoratorpanelgrid.add(verticalpanel);
 		decoratorpanelgrid.getElement().setAttribute("style", "margin-left: 39vw; margin-top: 10vh;");

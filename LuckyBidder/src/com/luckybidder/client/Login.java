@@ -1,10 +1,15 @@
 package com.luckybidder.client;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -13,26 +18,27 @@ public class Login extends HorizontalPanel {
 	private TextBox tPassword;
 	private Button btnAccedi;
 	private Button btnRegistra;
-	private Grid main;
+	private Grid gridMain;
 	
 	
 	String SESSION;
 	
 	
 	public Login()  {
-		//login class
-		//daii
+		DecoratorPanel decoratorpanel = new DecoratorPanel();
 		final VerticalPanel verticalpanel = new VerticalPanel();
-		this.add(verticalpanel);
-		verticalpanel.setSize("100%", "100%");
-		main = new Grid(3, 3);
-		verticalpanel.add(main);
-		main.setSize("100%", "100%");
+		
+		HTMLPanel htmlpanel = new HTMLPanel("<center><b>LOGIN</b></center>");
+		htmlpanel.getElement().setAttribute("style", "padding: 5px");
+		verticalpanel.add(htmlpanel);
+		
+		gridMain = new Grid(3, 3);
+		verticalpanel.add(gridMain);
 		
 		Label labelUser = new Label("Username");
-		main.setWidget(0, 0, labelUser);
+		gridMain.setWidget(0, 0, labelUser);
 		tUsername = new TextBox();
-		main.setWidget(0, 1, tUsername);
+		gridMain.setWidget(0, 1, tUsername);
 		tUsername.setSize("160px", "17px");
 		
 	
@@ -40,19 +46,44 @@ public class Login extends HorizontalPanel {
 		tPassword = new PasswordTextBox();
 		tPassword.setWidth("150px");
 		Label requiredPassword = new Label("(*)");
-		main.setWidget(1, 0, labelPassword);
-		main.setWidget(1, 1, tPassword);
+		gridMain.setWidget(1, 0, labelPassword);
+		gridMain.setWidget(1, 1, tPassword);
 		tPassword.setSize("160px", "17px");
 		
 		//BUTTON Registrati e Torna a Login
 		Grid gridButton = new Grid(1,2);
-		Button btnAccedi = new Button("Accedi");
-		Button btnRegistrat = new Button("Registrati");
+		btnAccedi = new Button("Accedi");
+		btnRegistra = new Button("Registrati");
 		gridButton.setWidget(0, 0, btnAccedi);
 		gridButton.setWidget(0, 1, btnRegistra);
-		gridButton.setWidth("260px");
-		verticalpanel.add(gridButton);
+		gridButton.getElement().setAttribute("style", "margin-left: 22%; argin-rigth: 15%; padding: 5px");
 		
+		btnAccedi.addClickHandler( new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				//Metodo per checkLogin
+				
+			}
+			
+		});
+		
+		btnRegistra.addClickHandler( new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				Registrazione registrazione = new Registrazione();
+				RootPanel.get().clear();
+				RootPanel.get().add(registrazione);
+				
+			}
+			
+		});
+		
+		verticalpanel.add(gridButton);
+		decoratorpanel.add(verticalpanel);
+		decoratorpanel.getElement().setAttribute("style", "margin-left: 39vw; margin-top: 10vh;");
+		this.add(decoratorpanel);
 	}
 	
 	

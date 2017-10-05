@@ -20,6 +20,7 @@ public class Login extends HorizontalPanel {
 	
 	
 	public Login()  {
+		//login class
 		final VerticalPanel verticalpanel = new VerticalPanel();
 		this.add(verticalpanel);
 		verticalpanel.setSize("100%", "100%");

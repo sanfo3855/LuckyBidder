@@ -1,6 +1,7 @@
 package com.luckybidder.server;
 
 import com.luckybidder.client.GreetingService;
+import com.luckybidder.client.LuckyBidderService;
 import com.luckybidder.shared.FieldVerifier;
 
 import java.io.File;
@@ -20,7 +21,7 @@ import com.luckybidder.shared.*;
  * The server-side implementation of the RPC service.
  */
 @SuppressWarnings("serial")
-public class LuckyBidderImpl extends RemoteServiceServlet implements GreetingService {
+public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidderService {
 	
 	DB dbUtenti;
 	DB dbProdotti;
@@ -44,10 +45,23 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements GreetingSer
 		String luogoNascita = utente.getLuogoNascita();
 		
 		DB dbUtenti = getDBUtenti();
-		BTreeMap<String, Utente> mapUtenti = dbUtenti.getTreeMap(KeyMap.MapUtenti.toString());
-		if(mapUtenti.isEmpty() || !mapUtenti.containsKey(username) && username.equals("admin") && username.contentEquals("Admin")) {
-			Utente newUtente = new Utente(username, nome, cognome, telefono, password,
-										email, codiceFiscale, indirizzo, sesso, dataNascita, luogoNascita);
+		BTreeMap<String, Utente> mapUtenti = dbUtenti.getTreeMap("MapUtenti");
+		
+		if(!mapUtenti.containsKey(username)) {
+			
+			Utente newUtente = new Utente();
+			newUtente.setUsername(username); 
+			newUtente.setNome(nome);
+			newUtente.setCognome(cognome);
+			newUtente.setPassword(password);
+			newUtente.setEmail(email);
+			newUtente.setCodiceFiscale(codiceFiscale); 
+			newUtente.setTelefono(telefono); 
+			newUtente.setIndirizzo(indirizzo);
+			newUtente.setSesso(sesso);
+			newUtente.setDataNascita(dataNascita);
+			newUtente.setLuogoNascita(luogoNascita);
+			
 			mapUtenti.put(newUtente.getUsername(), newUtente);
 			dbUtenti.commit();
 			SESSION(username);
@@ -56,6 +70,7 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements GreetingSer
 			return true;
 		} else {
 			dbUtenti.close();
+			System.out.print("Username " + username +" già esistente");
 			return false;
 		}
 	}
@@ -74,28 +89,6 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements GreetingSer
 		return dbUtenti;	
 	}
 	
-	
-	
-	
-	
-	public String greetServer(String input) throws IllegalArgumentException {
-		// Verify that the input is valid. 
-		if (!FieldVerifier.isValidName(input)) {
-			// If the input is not valid, throw an IllegalArgumentException back to
-			// the client.
-			throw new IllegalArgumentException("Name must be at least 4 characters long");
-		}
-
-		String serverInfo = getServletContext().getServerInfo();
-		String userAgent = getThreadLocalRequest().getHeader("User-Agent");
-
-		// Escape data from the client to avoid cross-site script vulnerabilities.
-		input = escapeHtml(input);
-		userAgent = escapeHtml(userAgent);
-
-		return "Hello, " + input + "!<br><br>I am running " + serverInfo + ".<br><br>It looks like you are using:<br>"
-				+ userAgent;
-	}
 
 	/**
 	 * Escape an html string. Escaping data received from the client helps to

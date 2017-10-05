@@ -6,14 +6,24 @@
          xmlns="http://java.sun.com/xml/ns/javaee">
 
   <!-- Servlets -->
-  <servlet>
+  <!-- <servlet>
     <servlet-name>greetServlet</servlet-name>
     <servlet-class>com.luckybidder.server.GreetingServiceImpl</servlet-class>
+  </servlet>-->
+  
+  <servlet>
+      <servlet-name>luckyBidderServlet</servlet-name>
+      <servlet-class>com.luckybidder.server.LuckyBidderImpl</servlet-class>
   </servlet>
   
-  <servlet-mapping>
+  <!-- <servlet-mapping>
     <servlet-name>greetServlet</servlet-name>
     <url-pattern>/luckybidder/greet</url-pattern>
+  </servlet-mapping>-->
+  
+  <servlet-mapping>
+      <servlet-name>luckyBidderServlet</servlet-name>
+      <url-pattern>/luckybidder/luckybidderservice</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->

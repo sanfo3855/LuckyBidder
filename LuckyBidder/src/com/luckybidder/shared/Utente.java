@@ -1,8 +1,9 @@
 package com.luckybidder.shared;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Utente {
+public class Utente implements Serializable{
 
 	private String username;
 	private String nome;
@@ -31,10 +32,11 @@ public class Utente {
 	 * @param dataNascita
 	 * @param luogoNascita
 	 */
-	public Utente( String username, String nome, String cognome, String telefono, String password, String email, 
+	public Utente() {}
+	/*public Utente( String username, String nome, String cognome, String telefono, String password, String email, 
 			String codiceFiscale, String indirizzo, char sesso, Date dataNascita, String luogoNascita) {
 		
-	}
+	}*/
 
 	/**
 	 * 

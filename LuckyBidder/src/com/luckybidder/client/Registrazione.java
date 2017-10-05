@@ -252,7 +252,6 @@ public class Registrazione extends HorizontalPanel{
 		});		
 		
 		
-		
 		decoratorpanelgrid.add(verticalpanel);
 		decoratorpanelgrid.getElement().setAttribute("style", "margin-left: 39vw; margin-top: 10vh;");
 		this.add(decoratorpanelgrid);

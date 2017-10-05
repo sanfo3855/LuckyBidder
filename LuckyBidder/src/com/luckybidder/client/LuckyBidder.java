@@ -17,7 +17,9 @@ public class LuckyBidder implements EntryPoint {
 		
 		//final LuckyBidderServiceAsync luckyBidderServiceUtente = GWT.create(LuckyBidderService.class);
 		
+		Login login = new Login();
 		Registrazione registrazione = new Registrazione();
 		rootpanel.add(registrazione);
+		rootpanel.add(login);
 	}
 }

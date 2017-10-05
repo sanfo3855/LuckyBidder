@@ -111,6 +111,25 @@ public class Registrazione extends HorizontalPanel{
 		grid.setWidget(6, 1, tCodiceFiscale);
 		grid.setWidget(6, 2, requiredCodiceFiscale);
 		
+		//INDIRIZZO
+		Label labelIndirizzo = new Label("Indirizzo ");
+		tIndirizzo = new TextBox();
+		tIndirizzo.setWidth("150px");
+		Label requiredIndirizzo = new Label("(*)");
+		grid.setWidget(7, 0, labelIndirizzo);
+		grid.setWidget(7, 1, tIndirizzo);
+		grid.setWidget(7, 2, requiredIndirizzo);
+		
+		//CODICE FISCALE
+		/*Label labelIndirizzo = new Label("Indirizzo ");
+		tIndirizzo = new TextBox();
+		tIndirizzo.setWidth("150px");
+		Label requiredIndirizzo = new Label("(*)");
+		grid.setWidget(6, 0, labelIndirizzo);
+		grid.setWidget(6, 1, tIndirizzo);
+		grid.setWidget(6, 2, requiredIndirizzo);*/
+				
+		
 		verticalpanel.add(grid);
 		this.add(verticalpanel);
 	}

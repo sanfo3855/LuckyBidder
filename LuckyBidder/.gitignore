@@ -4,3 +4,6 @@
 .project
 /war/luckybidder/
 /bin/
+/war/MapDBUtenti
+/war/MapDBUtenti.p
+/war/MapDBUtenti.t

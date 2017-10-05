@@ -20,11 +20,11 @@ public class Login extends HorizontalPanel {
 	
 	
 	public Login()  {
-		final HorizontalPanel horizontalpanel = new HorizontalPanel();
-		this.add(horizontalpanel);
-		horizontalpanel.setSize("100%", "100%");
+		final VerticalPanel verticalpanel = new VerticalPanel();
+		this.add(verticalpanel);
+		verticalpanel.setSize("100%", "100%");
 		main = new Grid(3, 3);
-		horizontalpanel.add(main);
+		verticalpanel.add(main);
 		main.setSize("100%", "100%");
 		
 		Label labelUser = new Label("Username");
@@ -41,6 +41,15 @@ public class Login extends HorizontalPanel {
 		main.setWidget(1, 0, labelPassword);
 		main.setWidget(1, 1, tPassword);
 		tPassword.setSize("160px", "17px");
+		
+		//BUTTON Registrati e Torna a Login
+		Grid gridButton = new Grid(1,2);
+		Button btnAccedi = new Button("Accedi");
+		Button btnRegistrat = new Button("Registrati");
+		gridButton.setWidget(0, 0, btnAccedi);
+		gridButton.setWidget(0, 1, btnRegistra);
+		gridButton.setWidth("260px");
+		verticalpanel.add(gridButton);
 		
 	}
 	

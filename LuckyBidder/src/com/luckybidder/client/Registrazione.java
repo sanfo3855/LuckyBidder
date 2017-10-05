@@ -120,15 +120,13 @@ public class Registrazione extends HorizontalPanel{
 		grid.setWidget(7, 1, tIndirizzo);
 		grid.setWidget(7, 2, requiredIndirizzo);
 		
-		//CODICE FISCALE
-		//mancante
-		/*Label labelIndirizzo = new Label("Indirizzo ");
-		tIndirizzo = new TextBox();
-		tIndirizzo.setWidth("150px");
-		Label requiredIndirizzo = new Label("(*)");
-		grid.setWidget(6, 0, labelIndirizzo);
+		//SESSO
+		Label labelSesso = new Label("Sesso ");
+		//radButSessoM = new RadioButton();
+		Label requiredSesso = new Label("");
+		grid.setWidget(6, 0, labelSesso);
 		grid.setWidget(6, 1, tIndirizzo);
-		grid.setWidget(6, 2, requiredIndirizzo);*/
+		grid.setWidget(6, 2, requiredSesso);
 				
 		
 		verticalpanel.add(grid);

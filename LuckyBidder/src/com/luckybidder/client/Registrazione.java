@@ -12,10 +12,12 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -43,20 +45,15 @@ public class Registrazione extends HorizontalPanel{
 	String SESSION;
 	
 	public Registrazione() {
-		
+		final DecoratorPanel decoratorpanelgrid = new DecoratorPanel();
 		final VerticalPanel verticalpanel = new VerticalPanel();
-		verticalpanel.setSize("430px", "485px");
 		
 		final LuckyBidderServiceAsync luckyBidderServiceUtente = GWT.create(LuckyBidderService.class);
-
-		HTMLPanel htmlpanel = new HTMLPanel("");
-		verticalpanel.add(htmlpanel);
 		
 		Grid grid = new Grid(11,3);
-		verticalpanel.setCellHorizontalAlignment(grid, HasHorizontalAlignment.ALIGN_CENTER);
-		verticalpanel.setTitle("Registrazione");
-		grid.setSize("20%", "40%");		
-		
+		HTMLPanel htmlpanel = new HTMLPanel("<center><b>REGISTRAZIONE</b></center>");
+		htmlpanel.getElement().setAttribute("style", "padding: 5px");
+		verticalpanel.add(htmlpanel);
 		//USERNAME
 		Label labelUsername = new Label("Username ");
 		tUsername = new TextBox();
@@ -162,7 +159,8 @@ public class Registrazione extends HorizontalPanel{
 		Button bReturnLogin = new Button("← Torna a Login");
 		gridButton.setWidget(0, 0, bReturnLogin);
 		gridButton.setWidget(0, 1, bRegistrati);
-		gridButton.setWidth("260px");
+		gridButton.getElement().setAttribute("style", "margin-left: 15%; argin-rigth: 15%; padding: 5px");
+		
 		verticalpanel.add(gridButton);
 		
 		bRegistrati.addClickHandler(new ClickHandler() {
@@ -236,7 +234,7 @@ public class Registrazione extends HorizontalPanel{
 								popup.center();
 							} else if (result==false) {
 								PopupPanel popup = new PopupPanel(true);
-								popup.setWidget(new HTML("Registrazione fallita, username "+ username +" già esistente!"));
+								popup.setWidget(new HTML("<font color='Red'>Registrazione fallita, username "+ username +" già esistente!</font>"));
 								popup.center();
 							}
 							
@@ -253,6 +251,10 @@ public class Registrazione extends HorizontalPanel{
 			}
 		});		
 		
-		this.add(verticalpanel);
+		
+		
+		decoratorpanelgrid.add(verticalpanel);
+		decoratorpanelgrid.getElement().setAttribute("style", "margin-left: 39vw; margin-top: 10vh;");
+		this.add(decoratorpanelgrid);
 	}
 }

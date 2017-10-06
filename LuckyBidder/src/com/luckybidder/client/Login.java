@@ -62,7 +62,10 @@ public class Login extends HorizontalPanel {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				//Metodo per checkLogin
+				TopBar topbar = new TopBar();
+				Login login = new Login();
+				RootPanel.get().clear();
+				RootPanel.get().add(topbar);
 				
 			}
 			
@@ -72,10 +75,11 @@ public class Login extends HorizontalPanel {
 
 			@Override
 			public void onClick(ClickEvent event) {
+				TopBar topbar = new TopBar();
 				Registrazione registrazione = new Registrazione();
 				RootPanel.get().clear();
+				RootPanel.get().add(topbar);
 				RootPanel.get().add(registrazione);
-				
 			}
 			
 		});

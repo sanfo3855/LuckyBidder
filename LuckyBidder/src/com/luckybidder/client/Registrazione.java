@@ -43,7 +43,7 @@ public class Registrazione extends HorizontalPanel{
 	private DateBox tDataNascita;
 	private TextBox tLuogoNascita;
 	
-	String SESSION;
+	public String SESSION;
 	
 	public Registrazione() {
 		final DecoratorPanel decoratorpanelgrid = new DecoratorPanel();
@@ -256,8 +256,10 @@ public class Registrazione extends HorizontalPanel{
 
 			@Override
 			public void onClick(ClickEvent event) {
+				TopBar topbar = new TopBar();
 				Login login = new Login();
 				RootPanel.get().clear();
+				RootPanel.get().add(topbar);
 				RootPanel.get().add(login);
 			}
 			

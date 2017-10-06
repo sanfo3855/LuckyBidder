@@ -9,7 +9,7 @@ public class Prodotto {
 	private String descrizione;
 	private double baseAsta;
 	private Date dataScadenza;
-	private StatoAstaProdotto stato;
+	private String stato;
 	private String vincitore;
 	
 	
@@ -51,11 +51,11 @@ public class Prodotto {
 		this.dataScadenza = dataScadenza;
 	}
 
-	public StatoAstaProdotto getStato() {
+	public String getStato() {
 		return stato;
 	}
 
-	public void setStato(StatoAstaProdotto stato) {
+	public void setStato(String stato) {
 		this.stato = stato;
 	}
 

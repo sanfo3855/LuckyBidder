@@ -7,11 +7,26 @@ public class Offerta {
 	private double importo;
 	private Date dataOfferta;
 	private Prodotto prodotto;
+	private int idOggetto;
+	private double prezzo;
+	private String data;
 	
 	public Offerta() {
 		
 	}
-
+	
+	public String getData() {
+		return data;
+	}
+	
+	public double getPrezzo() {
+		return prezzo;
+	}
+	
+	public int getIdProdotto() {
+		return idOggetto;
+	}
+	
 	public double getImporto() {
 		return importo;
 	}

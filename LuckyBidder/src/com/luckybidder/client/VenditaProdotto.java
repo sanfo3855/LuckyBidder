@@ -13,14 +13,14 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.datepicker.client.DateBox;
 
-public class VenditaOggetto extends HorizontalPanel{
+public class VenditaProdotto extends HorizontalPanel{
 	private TextBox tNomeOggetto;
 	private TextBox tDescrizione;
 	private TextBox tPrezzoVendita;
 	private DateBox tScadenzaAsta;
 	private ListBox lCategoria;
 	
-	public VenditaOggetto() {
+	public VenditaProdotto() {
 		
 		final DecoratorPanel decoratorpanel = new DecoratorPanel();
 		final VerticalPanel verticalpanel = new VerticalPanel();

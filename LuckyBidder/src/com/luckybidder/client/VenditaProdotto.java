@@ -86,7 +86,7 @@ public class VenditaProdotto extends HorizontalPanel{
 		//decoratorpanel.getElement().setAttribute("style", "margin-left: 39vw; margin-top: 10vh;");
 		this.add(decoratorpanel);
 		
-		//BUTTON METTI IN VENDITA
+		//BOTTONE METTI IN VENDITA
 		Grid gridButton = new Grid(1,2);
 		Button bVendita = new Button("Metti in vendita");
 		Button bturnHome = new Button("← Torna alla Home");

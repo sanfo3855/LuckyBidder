@@ -2,13 +2,9 @@ package com.luckybidder.client;
 
 import com.luckybidder.shared.*;
 
-<<<<<<< HEAD
 import org.mapdb.DB;
 
-
-=======
 import com.google.gwt.core.client.GWT;
->>>>>>> branch 'master' of https://bitbucket.org/sanfo3855/luckybidder
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -28,13 +24,9 @@ public interface LuckyBidderService extends RemoteService{
 	}
 	
 	boolean registraUtente(Utente utente);
-<<<<<<< HEAD
 	
-	boolean aggiungiCategoria(Categoria categoria);
-=======
+	/*boolean aggiungiCategoria(Categoria categoria);*/
 
 	Utente loginUtente(String username, String password);
->>>>>>> branch 'master' of https://bitbucket.org/sanfo3855/luckybidder
-	
 	
 }

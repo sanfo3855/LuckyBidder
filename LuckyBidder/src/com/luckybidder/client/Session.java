@@ -22,8 +22,10 @@ public class Session {
 	 * @param utente
 	 */
 	public void setSession(Utente utente) {
-		this.sessionUtente = utente;
-		this.sessionUtente.setPassword(null);
+		if(utente!=null) {
+			utente.setPassword(null);
+			this.sessionUtente = utente;
+		}
 	}
 	
 	/**

@@ -25,9 +25,6 @@ public class Login extends HorizontalPanel {
 	private Grid gridMain;
 	
 	
-	String SESSION;
-	
-	
 	public Login()  {
 		
 		final LuckyBidderServiceAsync instanceLuckyBidderService = LuckyBidderService.Util.getInstance();

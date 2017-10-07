@@ -55,7 +55,7 @@ public class TopBar extends VerticalPanel {
 				//Home home = new Home();
 				RootPanel.get().clear();
 				RootPanel.get().add(topbar);
-				//RootPanel.get().add(home);
+				RootPanel.get().add(new HTMLPanel("<center>HOME</center>"));
 				
 			}
 			
@@ -65,8 +65,8 @@ public class TopBar extends VerticalPanel {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				Session.getInstance().setSession(null);
 				TopBar topbar = new TopBar();
+				Session.getInstance().setSession(null);
 				Login login = new Login();
 				RootPanel.get().clear();
 				RootPanel.get().add(topbar);

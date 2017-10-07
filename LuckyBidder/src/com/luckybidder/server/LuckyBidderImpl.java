@@ -57,11 +57,8 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 			return true;
 		} else {
 			dbUtenti.close();
-<<<<<<< HEAD
-			System.out.print("Username " + username +" giï¿½ esistente");
-=======
 			System.out.print("Username " + utente.getUsername() +" già esistente");
->>>>>>> branch 'master' of https://bitbucket.org/sanfo3855/luckybidder
+
 			return false;
 		}
 	}
@@ -87,15 +84,15 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 		}
 		return html.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 	}
-<<<<<<< HEAD
+
 	
-	private DB getDBCategorie() {
+	/*private DB getDBCategorie() {
 
 		dbCategorie = DBMaker.newFileDB(new File("MapDBCategorie")).closeOnJvmShutdown().make();		
 		return dbCategorie;	
-	}
+	}*/
 	
-	@Override
+	/*@Override
 	public boolean aggiungiCategoria(Categoria categoria) {
 		int id;
 		Categoria padre = categoria.getPadre();
@@ -126,10 +123,5 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 		}
 		else 			//Se la variabile risulta false, la categoria ï¿½ giï¿½ presente nel Db e non viene aggiunta
 			return false;
-	}
-=======
-
-
-	
->>>>>>> branch 'master' of https://bitbucket.org/sanfo3855/luckybidder
+	}*/
 }

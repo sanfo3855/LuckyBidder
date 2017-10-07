@@ -214,4 +214,13 @@ public class Utente implements Serializable{
 		this.luogoNascita = luogoNascita;
 	}
 	
+	@Override
+	public String toString() {
+		String stringUtente = "Username :" +this.username + "\n" +
+				"Nome: " + this.nome + "\n" +
+				"Cognome: " + this.cognome +"\n";
+							  
+		return stringUtente;
+	}
+	
 }

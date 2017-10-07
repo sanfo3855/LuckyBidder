@@ -18,8 +18,17 @@ public class LuckyBidder implements EntryPoint {
 		
 		TopBar topbar = new TopBar();
 		rootpanel.add(topbar);
+<<<<<<< HEAD
+		//Login login = new Login();
+		//rootpanel.add(login);
+		
+		Profilo profilo = new Profilo ();
+		rootpanel.add(profilo);
+	
+=======
 		Login login = new Login();
 		rootpanel.add(login);
 		
+>>>>>>> branch 'master' of https://bitbucket.org/sanfo3855/luckybidder
 	}
 }

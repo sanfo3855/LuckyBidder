@@ -6,6 +6,7 @@ import com.luckybidder.shared.FieldVerifier;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -70,7 +71,7 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 			return true;
 		} else {
 			dbUtenti.close();
-			System.out.print("Username " + username +" già esistente");
+			System.out.print("Username " + username +" giï¿½ esistente");
 			return false;
 		}
 	}
@@ -102,5 +103,44 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 			return null;
 		}
 		return html.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+	}
+	
+	private DB getDBCategorie() {
+
+		dbCategorie = DBMaker.newFileDB(new File("MapDBCategorie")).closeOnJvmShutdown().make();		
+		return dbCategorie;	
+	}
+	
+	@Override
+	public boolean aggiungiCategoria(Categoria categoria) {
+		int id;
+		Categoria padre = categoria.getPadre();
+		String nomeCategoria = categoria.getNomeCat();
+
+		DB dbCategorie = getDBCategorie();	//Si istanzia il Database delle categorie
+
+		BTreeMap<Integer, Categoria> mapCategorie = dbCategorie.getTreeMap("MapCategorie");
+		boolean aggiungi= true;
+		if(!mapCategorie.isEmpty()){
+			for(Map.Entry<Integer, Categoria> categorie : mapCategorie.entrySet()){	
+				//Si controlla se la nuova categoria sia giï¿½ presente nel Db
+				if (categorie.getValue().getNomeCat().equals(nomeCategoria)) {
+					//La variabile restituirï¿½ false
+					aggiungi=false;
+					break;
+				}
+			}
+		}
+		if (aggiungi) {
+			//Se la variabile risulta true, possiamo aggiungere la nuova actegoria nel Db
+			id = (mapCategorie.size()+1);	//Si assegna l'id
+			Categoria nuovaCategoria = new Categoria(padre, id, nomeCategoria);
+			mapCategorie.put(id,nuovaCategoria);	//La nuova categoria vine inserita nel Db
+			dbCategorie.commit();
+			System.out.println("Registrazione - Categoria : " + nuovaCategoria.toString());
+			return true; // registrazione inserita	
+		}
+		else 			//Se la variabile risulta false, la categoria ï¿½ giï¿½ presente nel Db e non viene aggiunta
+			return false;
 	}
 }

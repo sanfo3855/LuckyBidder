@@ -2,7 +2,11 @@ package com.luckybidder.client;
 
 
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
@@ -22,8 +26,9 @@ public class Profilo extends HorizontalPanel{
 	
 	public Profilo () {
 		DecoratorPanel decoratorpanel1 = new DecoratorPanel();
-		
 		final VerticalPanel verticalpanel = new VerticalPanel();
+		
+		final LuckyBidderServiceAsync instanceLuckyBidderService = LuckyBidderService.Util.getInstance();
 		
 		HTMLPanel htmlpanel = new HTMLPanel("<center><b>PROFILO</b></center>");
 		htmlpanel.getElement().setAttribute("style", "padding: 5px");
@@ -37,7 +42,7 @@ public class Profilo extends HorizontalPanel{
 		gridMain.setWidget(0, 0, lblNome);
 		lblNome.setSize("160px", "18px");
 		
-		Label nomeUser = new Label("Matteo");
+		Label nomeUser = new Label(Session.getInstance().getSession().getNome());
 		gridMain.setWidget(0, 1, nomeUser);
 		nomeUser.setSize("160px", "18px");
 
@@ -45,7 +50,7 @@ public class Profilo extends HorizontalPanel{
 		gridMain.setWidget(1, 0, lblCognome);
 		lblCognome.setSize("160px", "18px");
 
-		Label cognomeUser = new Label("Marche");
+		Label cognomeUser = new Label(Session.getInstance().getSession().getCognome());
 		gridMain.setWidget(1, 1, cognomeUser);
 		cognomeUser.setSize("160px", "18px");
 
@@ -53,7 +58,7 @@ public class Profilo extends HorizontalPanel{
 		gridMain.setWidget(2, 0, lblEmail);
 		lblEmail.setSize("160px", "18px");
 
-		Label emailUser  = new Label("matt@studio.unibo.it");
+		Label emailUser  = new Label(Session.getInstance().getSession().getEmail());
 		gridMain.setWidget(2, 1, emailUser);
 		emailUser.setSize("160px", "18px");
 
@@ -61,7 +66,7 @@ public class Profilo extends HorizontalPanel{
 		gridMain.setWidget(3, 0, lblCodiceFiscale);
 		lblCodiceFiscale.setSize("160px", "18px");
 
-		Label cfUser = new Label("MRCMTT");
+		Label cfUser = new Label(Session.getInstance().getSession().getCodiceFiscale());
 		gridMain.setWidget(3, 1, cfUser);
 		cfUser.setSize("160px", "18px");
 
@@ -69,7 +74,7 @@ public class Profilo extends HorizontalPanel{
 		gridMain.setWidget(4, 0, lblIndirizzo);
 		lblIndirizzo.setSize("160px", "18px");
 
-		Label indirizzoUser = new Label("Via alighieri");
+		Label indirizzoUser = new Label(Session.getInstance().getSession().getIndirizzo());
 		gridMain.setWidget(4, 1, indirizzoUser);
 		indirizzoUser.setSize("160px", "18px");
 		
@@ -77,24 +82,31 @@ public class Profilo extends HorizontalPanel{
 		Label lblSesso = new Label("Sesso");
 		gridMain.setWidget(5, 0, lblSesso);
 		lblSesso.setSize("160px", "18px");
-
-		Label sessoUser = new Label("M");
+		
+		char sessoChar = Session.getInstance().getSession().getSesso();
+		String sessoString = Character.toString(sessoChar);
+		
+		
+		Label sessoUser = new Label(sessoString);
 		gridMain.setWidget(5, 1, sessoUser);
 		sessoUser.setSize("160px", "18px");
 
 		Label lblDataDiNascita = new Label("Data di nascita");
 		gridMain.setWidget(6, 0, lblDataDiNascita);
 		lblDataDiNascita.setSize("160px", "18px");
-
-		Label nascitaUser = new Label("20-03-1995");
+		//date format
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		Date dateToConvert = Session.getInstance().getSession().getDataNascita();
+		String dateString = df.format(dateToConvert);
+		Label nascitaUser = new Label(dateString);
 		gridMain.setWidget(6, 1, nascitaUser);
 		nascitaUser.setSize("160px", "18px");
 
-		Label lblLuogoDiNascita = new Label("Luogo di nascita");
+		Label lblLuogoDiNascita = new Label("Luogo di Nascita");
 		gridMain.setWidget(7, 0, lblLuogoDiNascita);
 		lblLuogoDiNascita.setSize("160px", "18px");
 
-		Label luogoNascitaUser = new Label("Fano");
+		Label luogoNascitaUser = new Label(Session.getInstance().getSession().getLuogoNascita());
 		gridMain.setWidget(7, 1, luogoNascitaUser);
 		luogoNascitaUser.setSize("160px", "18px");
 		
@@ -102,7 +114,7 @@ public class Profilo extends HorizontalPanel{
 		gridMain.setWidget(8, 0, lblTelefono);
 		lblTelefono.setSize("160px", "18px");
 
-		Label telefonoUser = new Label("3490578683");
+		Label telefonoUser = new Label(Session.getInstance().getSession().getTelefono());
 		gridMain.setWidget(8, 1, telefonoUser);
 		telefonoUser.setSize("160px", "18px");
 		

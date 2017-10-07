@@ -24,65 +24,48 @@ import com.luckybidder.shared.*;
 @SuppressWarnings("serial")
 public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidderService {
 	
+	
 	DB dbUtenti;
 	DB dbProdotti;
 	DB dbDomande;
 	DB dbOfferte;
 	DB dbRisposte;
 	DB dbCategorie;
-
+	
+	public Utente loginUtente(String username, String password) {
+		dbUtenti = getDBUtenti();
+		BTreeMap<String, Utente> mapUtenti = dbUtenti.getTreeMap("MapUtenti");
+		if(mapUtenti.containsKey(username)) {
+			if(mapUtenti.get(username).getPassword().equals(password)) {
+				return mapUtenti.get(username);
+			}
+		}
+		return null;
+		
+	}
 	
 	public boolean registraUtente(Utente utente) {
-		String username = utente.getUsername();
-		String nome = utente.getNome();
-		String cognome = utente.getCognome();
-		String telefono = utente.getTelefono();
-		String password = utente.getPassword();
-		String email = utente.getEmail();
-		String codiceFiscale = utente.getCodiceFiscale();
-		String indirizzo = utente.getIndirizzo();
-		char sesso = utente.getSesso();
-		Date dataNascita = utente.getDataNascita();
-		String luogoNascita = utente.getLuogoNascita();
 		
-		DB dbUtenti = getDBUtenti();
+		dbUtenti = getDBUtenti();
 		BTreeMap<String, Utente> mapUtenti = dbUtenti.getTreeMap("MapUtenti");
 		
-		if(!mapUtenti.containsKey(username)) {
-			
-			Utente newUtente = new Utente();
-			newUtente.setUsername(username); 
-			newUtente.setNome(nome);
-			newUtente.setCognome(cognome);
-			newUtente.setPassword(password);
-			newUtente.setEmail(email);
-			newUtente.setCodiceFiscale(codiceFiscale); 
-			newUtente.setTelefono(telefono); 
-			newUtente.setIndirizzo(indirizzo);
-			newUtente.setSesso(sesso);
-			newUtente.setDataNascita(dataNascita);
-			newUtente.setLuogoNascita(luogoNascita);
-			
-			mapUtenti.put(newUtente.getUsername(), newUtente);
+		if(!mapUtenti.containsKey(utente.getUsername()) && !utente.getUsername().equals("admin") && !utente.getUsername().equals("Admin") ) {
+			mapUtenti.put(utente.getUsername(), utente);
 			dbUtenti.commit();
-			SESSION(username);
-			System.out.println("Registrato Utente: " + newUtente.toString());
 			dbUtenti.close();
+			System.out.println("Registrato Utente: " + utente.toString());
 			return true;
 		} else {
 			dbUtenti.close();
+<<<<<<< HEAD
 			System.out.print("Username " + username +" giï¿½ esistente");
+=======
+			System.out.print("Username " + utente.getUsername() +" già esistente");
+>>>>>>> branch 'master' of https://bitbucket.org/sanfo3855/luckybidder
 			return false;
 		}
 	}
 	
-	private String SESSION(String username) {
-		HttpServletRequest request = this.getThreadLocalRequest();
-		HttpSession session = request.getSession(true);
-		session.setAttribute("username", username);
-		return session.getAttribute("username").toString();
-		
-	}
 
 	private DB getDBUtenti() {
 
@@ -104,6 +87,7 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 		}
 		return html.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 	}
+<<<<<<< HEAD
 	
 	private DB getDBCategorie() {
 
@@ -143,4 +127,9 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 		else 			//Se la variabile risulta false, la categoria ï¿½ giï¿½ presente nel Db e non viene aggiunta
 			return false;
 	}
+=======
+
+
+	
+>>>>>>> branch 'master' of https://bitbucket.org/sanfo3855/luckybidder
 }

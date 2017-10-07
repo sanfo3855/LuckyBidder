@@ -43,13 +43,11 @@ public class Registrazione extends HorizontalPanel{
 	private DateBox tDataNascita;
 	private TextBox tLuogoNascita;
 	
-	public String SESSION;
-	
 	public Registrazione() {
 		final DecoratorPanel decoratorpanelgrid = new DecoratorPanel();
 		final VerticalPanel verticalpanel = new VerticalPanel();
 		
-		final LuckyBidderServiceAsync luckyBidderServiceUtente = GWT.create(LuckyBidderService.class);
+		final LuckyBidderServiceAsync instanceLuckyBidderService = LuckyBidderService.Util.getInstance();
 		
 		Grid grid = new Grid(11,3);
 		HTMLPanel htmlpanel = new HTMLPanel("<center><b>REGISTRAZIONE</b></center>");
@@ -202,8 +200,7 @@ public class Registrazione extends HorizontalPanel{
 					} else {
 						
 					}
-					
-					Utente newUtente = new Utente();
+					final Utente newUtente = new Utente();
 					newUtente.setUsername(username); 
 					newUtente.setNome(nome);
 					newUtente.setCognome(cognome);
@@ -216,10 +213,11 @@ public class Registrazione extends HorizontalPanel{
 					newUtente.setDataNascita(dataNascita);
 					newUtente.setLuogoNascita(luogoNascita);
 					
-					luckyBidderServiceUtente.registraUtente(newUtente, new AsyncCallback<Boolean>() {
+					instanceLuckyBidderService.registraUtente(newUtente, new AsyncCallback<Boolean>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
+							
 							PopupPanel popup = new PopupPanel(true);
 							popup.setWidget(new HTML("<font color='red'>Impossibile inserire una nuova registrazione: Errore nella connessione con il server.<br>"+caught+"</font>"));
 							popup.center();
@@ -229,10 +227,15 @@ public class Registrazione extends HorizontalPanel{
 						@Override
 						public void onSuccess(Boolean result) {
 							if(result==true) {
-								SESSION = username;
+								Session.getInstance().setSession(newUtente);
 								PopupPanel popup = new PopupPanel(true);
 								popup.setWidget(new HTML("<font color='Black'>Registrato</font>"));
 								popup.center();
+								TopBar topbar = new TopBar();
+								Profilo profilo = new Profilo();
+								RootPanel.get().clear();
+								RootPanel.get().add(topbar);
+								RootPanel.get().add(profilo);
 							} else if (result==false) {
 								PopupPanel popup = new PopupPanel(true);
 								popup.setWidget(new HTML("<font color='Red'>Registrazione fallita, username "+ username +" già esistente!</font>"));
@@ -242,6 +245,7 @@ public class Registrazione extends HorizontalPanel{
 						}
 						
 					});
+					
 					
 				} else {
 					PopupPanel popup = new PopupPanel(true);

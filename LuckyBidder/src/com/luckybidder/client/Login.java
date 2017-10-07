@@ -2,16 +2,20 @@ package com.luckybidder.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.luckybidder.shared.Utente;
 
 public class Login extends HorizontalPanel {
 	private TextBox tUsername;
@@ -25,6 +29,9 @@ public class Login extends HorizontalPanel {
 	
 	
 	public Login()  {
+		
+		final LuckyBidderServiceAsync instanceLuckyBidderService = LuckyBidderService.Util.getInstance();
+		
 		DecoratorPanel decoratorpanel = new DecoratorPanel();
 		final VerticalPanel verticalpanel = new VerticalPanel();
 		
@@ -62,10 +69,41 @@ public class Login extends HorizontalPanel {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				TopBar topbar = new TopBar();
-				Login login = new Login();
-				RootPanel.get().clear();
-				RootPanel.get().add(topbar);
+				instanceLuckyBidderService.loginUtente(tUsername.getValue(), tPassword.getValue(), new AsyncCallback<Utente>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						PopupPanel popup = new PopupPanel(true);
+						popup.setWidget(new HTML("<font color='red'>Impossibile effettuare login: Errore nella connessione con il server.<br>"+caught+"</font>"));
+						popup.center();
+						
+					}
+
+					@Override
+					public void onSuccess(Utente result) {
+						if(result!=null) {
+							Session.getInstance().setSession(result);
+							TopBar topbar = new TopBar();
+							Profilo profilo = new Profilo();
+							RootPanel.get().clear();
+							RootPanel.get().add(topbar);
+							RootPanel.get().add(profilo);
+						} else {
+							TopBar topbar = new TopBar();
+							Login login = new Login();
+							RootPanel.get().clear();
+							RootPanel.get().add(topbar);
+							RootPanel.get().add(login);
+							PopupPanel popup = new PopupPanel(true);
+							popup.setWidget(new HTML("<font color='red'>Errore Login<br>Reinserire Username e Password</font>"));
+							popup.center();
+							
+						}
+						
+					}
+					
+				});
+				
 				
 			}
 			

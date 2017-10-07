@@ -23,6 +23,7 @@ public class Session {
 	 */
 	public void setSession(Utente utente) {
 		this.sessionUtente = utente;
+		this.sessionUtente.setPassword(null);
 	}
 	
 	/**

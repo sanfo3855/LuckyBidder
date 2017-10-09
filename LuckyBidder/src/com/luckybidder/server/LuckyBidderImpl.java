@@ -39,6 +39,10 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 			if(mapUtenti.get(username).getPassword().equals(password)) {
 				return mapUtenti.get(username);
 			}
+		} else if( username.equals("admin") && password.equals("admin")) {
+			Utente adminUtente = new Utente();
+			adminUtente.setUsername("admin");
+			return adminUtente;
 		}
 		return null;
 		

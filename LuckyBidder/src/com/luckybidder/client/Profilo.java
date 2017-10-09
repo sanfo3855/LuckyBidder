@@ -1,12 +1,10 @@
 package com.luckybidder.client;
 
-
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
@@ -95,10 +93,11 @@ public class Profilo extends HorizontalPanel{
 		gridMain.setWidget(6, 0, lblDataDiNascita);
 		lblDataDiNascita.setSize("160px", "18px");
 		//date format
-		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		
 		Date dateToConvert = Session.getInstance().getSession().getDataNascita();
-		String dateString = df.format(dateToConvert);
-		Label nascitaUser = new Label(dateString);
+		DateTimeFormat fm = DateTimeFormat.getFormat("dd/MM/yyyy");
+		String st = fm.format(dateToConvert);
+		Label nascitaUser = new Label(st);
 		gridMain.setWidget(6, 1, nascitaUser);
 		nascitaUser.setSize("160px", "18px");
 

@@ -65,8 +65,8 @@ public class TopBar extends VerticalPanel {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				TopBar topbar = new TopBar();
 				Session.getInstance().setSession(null);
+				TopBar topbar = new TopBar();
 				Login login = new Login();
 				RootPanel.get().clear();
 				RootPanel.get().add(topbar);

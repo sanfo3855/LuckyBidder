@@ -11,7 +11,12 @@ public class Categoria implements Serializable, IsSerializable {
 	private Categoria padre;
 	private int id;
 	
-	
+	/**
+	 * 
+	 * @param father
+	 * @param id
+	 * @param nomeCat
+	 */
 	public Categoria(Categoria father, int id, String nomeCat) {
 		this.setPadre(father);
 		this.setId(id);
@@ -19,27 +24,51 @@ public class Categoria implements Serializable, IsSerializable {
 	}
 	
 	public Categoria() {}
-
+	
+	/**
+	 * 
+	 * @return nomeCategoria
+	 */
 	public String getNomeCategoria() {
 		return nomeCategoria;
 	}
-
+	
+	/**
+	 * 
+	 * @param nomeCategoria
+	 */
 	public void setNomeCategoria(String nomeCategoria) {
 		this.nomeCategoria = nomeCategoria;
 	}
-
+	
+	/**
+	 * 
+	 * @return padre
+	 */
 	public Categoria getPadre() {
 		return padre;
 	}
 
+	/**
+	 * 
+	 * @param padre
+	 */
 	public void setPadre(Categoria padre) {
 		this.padre = padre;
 	}
-
+	
+	/**
+	 * 
+	 * @return id
+	 */
 	public int getId() {
 		return id;
 	}
-
+	
+	/**
+	 * 
+	 * @param id
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}

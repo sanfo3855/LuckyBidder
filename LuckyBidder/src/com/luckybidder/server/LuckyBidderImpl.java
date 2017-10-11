@@ -57,17 +57,36 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 			return true;
 		} else {
 			dbUtenti.close();
-			System.out.print("Username " + utente.getUsername() +" già esistente");
+			System.out.print("Username " + utente.getUsername() +" giï¿½ esistente");
 
 			return false;
 		}
 	}
 	
+public boolean vendiProdotto(Prodotto prodotto) {
+		
+		dbProdotti = getDBProdotti();
+		BTreeMap<Integer, Prodotto> mapProdotti = dbProdotti.getTreeMap("MapProdotti");
+		int size = mapProdotti.size();
+		int id = size + 1;
+		prodotto.setIdProdotto(id);
+		mapProdotti.put(id, prodotto);
+		dbProdotti.commit();
+		dbProdotti.close();
+		System.out.println("Prodotto messo in vednita: " + prodotto.toString());
+		return true;
+}
 
 	private DB getDBUtenti() {
 
 		dbUtenti = DBMaker.newFileDB(new File("MapDBUtenti")).closeOnJvmShutdown().make();		
 		return dbUtenti;	
+	}
+	
+	private DB getDBProdotti() {
+
+		dbProdotti = DBMaker.newFileDB(new File("MapDBProdotti")).closeOnJvmShutdown().make();		
+		return dbProdotti;	
 	}
 	
 

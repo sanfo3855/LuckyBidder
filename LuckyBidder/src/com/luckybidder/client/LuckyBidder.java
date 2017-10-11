@@ -18,14 +18,11 @@ public class LuckyBidder implements EntryPoint {
 		
 		TopBar topbar = new TopBar();
 		rootpanel.add(topbar);
+
 		//Login login = new Login();
 		//rootpanel.add(login);
 		
-		/*Profilo profilo = new Profilo ();
-		rootpanel.add(profilo);*/
-	
-
-		Login login = new Login();
-		rootpanel.add(login);
+		VenditaProdotto venditaProdotto = new VenditaProdotto();
+		rootpanel.add(venditaProdotto);
 	}
 }

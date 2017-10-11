@@ -1,8 +1,9 @@
 package com.luckybidder.shared;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Prodotto {
+public class Prodotto implements Serializable {
 	
 	private int idProdotto;
 	private String nomeProdotto;
@@ -11,6 +12,8 @@ public class Prodotto {
 	private Date dataScadenza;
 	private String stato;
 	private String vincitore;
+	private String nomePropostaMigliore;
+	private String categoria;
 	
 	
 	public enum StatoAstaProdotto { APERTA, CHIUSA	};
@@ -75,5 +78,28 @@ public class Prodotto {
 		this.nomeProdotto = nomeProdotto;
 	}
 	
+	public String getNomePropostaMigliore() {
+		return nomePropostaMigliore;
+	}
 	
+	public void setNomePropostaMigliore(String nomePropostaMigliore) {
+		this.nomePropostaMigliore = nomePropostaMigliore;
+	}
+	
+	public String getCategoria() {
+		return categoria;
+	}
+	
+	public void setCategoria(String categoria) {
+		this.categoria = categoria;
+	}
+	
+	@Override
+	public String toString() {
+		String stringProdotto = "id :" +this.idProdotto + "\n" +
+				"Nome: " + this.nomeProdotto + "\n" +
+				"Categoria: " + this.categoria +"\n";
+							  
+		return stringProdotto;
+	}
 }

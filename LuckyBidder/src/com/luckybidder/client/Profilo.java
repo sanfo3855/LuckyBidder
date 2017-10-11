@@ -81,31 +81,47 @@ public class Profilo extends HorizontalPanel{
 		gridMain.setWidget(5, 0, lblSesso);
 		lblSesso.setSize("160px", "18px");
 		
-		char sessoChar = Session.getInstance().getSession().getSesso();
-		String sessoString = Character.toString(sessoChar);
-		
-		
+		String sessoString;
+		if( Session.getInstance().getSession().getSesso() != '\u0000' ) {
+			char sessoChar = Session.getInstance().getSession().getSesso();
+			sessoString = Character.toString(sessoChar);
+		} else {
+			sessoString = "";
+		}
 		Label sessoUser = new Label(sessoString);
 		gridMain.setWidget(5, 1, sessoUser);
 		sessoUser.setSize("160px", "18px");
 
+
 		Label lblDataDiNascita = new Label("Data di nascita");
 		gridMain.setWidget(6, 0, lblDataDiNascita);
 		lblDataDiNascita.setSize("160px", "18px");
-		//date format
 		
-		Date dateToConvert = Session.getInstance().getSession().getDataNascita();
-		DateTimeFormat fm = DateTimeFormat.getFormat("dd/MM/yyyy");
-		String st = fm.format(dateToConvert);
+		String st;
+		if(Session.getInstance().getSession().getDataNascita() != null) {
+			Date dateToConvert = Session.getInstance().getSession().getDataNascita();
+			DateTimeFormat fm = DateTimeFormat.getFormat("dd/MM/yyyy");
+			st = fm.format(dateToConvert);
+		} else {
+			st = "";
+		}
 		Label nascitaUser = new Label(st);
 		gridMain.setWidget(6, 1, nascitaUser);
 		nascitaUser.setSize("160px", "18px");
-
+		
+		
 		Label lblLuogoDiNascita = new Label("Luogo di Nascita");
 		gridMain.setWidget(7, 0, lblLuogoDiNascita);
 		lblLuogoDiNascita.setSize("160px", "18px");
-
-		Label luogoNascitaUser = new Label(Session.getInstance().getSession().getLuogoNascita());
+		
+		String luogo;
+		
+		if(Session.getInstance().getSession().getLuogoNascita() != null) {
+			luogo = Session.getInstance().getSession().getLuogoNascita();
+		} else {
+			luogo = "";
+		}
+		Label luogoNascitaUser = new Label(luogo);
 		gridMain.setWidget(7, 1, luogoNascitaUser);
 		luogoNascitaUser.setSize("160px", "18px");
 		

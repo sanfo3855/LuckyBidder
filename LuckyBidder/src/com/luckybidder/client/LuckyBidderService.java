@@ -2,7 +2,6 @@ package com.luckybidder.client;
 
 import com.luckybidder.shared.*;
 
-import org.mapdb.DB;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -26,7 +25,7 @@ public interface LuckyBidderService extends RemoteService{
 	boolean registraUtente(Utente utente);
 	boolean vendiProdotto(Prodotto prodotto);
 	
-	/*boolean aggiungiCategoria(Categoria categoria);*/
+	boolean aggiungiCategoria(Categoria categoria);
 
 	Utente loginUtente(String username, String password); 
 	

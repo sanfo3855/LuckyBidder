@@ -176,8 +176,8 @@ public class Registrazione extends HorizontalPanel{
 				Date dataNascita = null;
 				String luogoNascita = null;
 				
-				if(!username.isEmpty() || !nome.isEmpty() || !cognome.isEmpty() || !telefono.isEmpty() ||
-						!password.isEmpty() || !email.isEmpty() || !codiceFiscale.isEmpty() || 
+				if(!username.isEmpty() && !nome.isEmpty() && !cognome.isEmpty() && !telefono.isEmpty() &&
+						!password.isEmpty() && !email.isEmpty() && !codiceFiscale.isEmpty() && 
 						!indirizzo.isEmpty()) {
 					
 					//Setta sesso se esiste

@@ -232,5 +232,8 @@ public class Profilo extends HorizontalPanel{
 		
 		
 		
+		
+		
+		
 	}
 }

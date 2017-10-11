@@ -19,10 +19,8 @@ public class LuckyBidder implements EntryPoint {
 		TopBar topbar = new TopBar();
 		rootpanel.add(topbar);
 
-		//Login login = new Login();
-		//rootpanel.add(login);
-		
-		VenditaProdotto venditaProdotto = new VenditaProdotto();
-		rootpanel.add(venditaProdotto);
+		Login login = new Login();
+		rootpanel.add(login);
+
 	}
 }

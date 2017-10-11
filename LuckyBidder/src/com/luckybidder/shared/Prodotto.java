@@ -6,6 +6,7 @@ import java.util.Date;
 public class Prodotto implements Serializable {
 	
 	private int idProdotto;
+	private String username;
 	private String nomeProdotto;
 	private String descrizione;
 	private double baseAsta;
@@ -28,6 +29,14 @@ public class Prodotto implements Serializable {
 
 	public void setIdProdotto(int idProdotto) {
 		this.idProdotto = idProdotto;
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+	
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getDescrizione() {
@@ -97,6 +106,7 @@ public class Prodotto implements Serializable {
 	@Override
 	public String toString() {
 		String stringProdotto = "id :" +this.idProdotto + "\n" +
+				"Venditore " + this.username + "\n" +
 				"Nome: " + this.nomeProdotto + "\n" +
 				"Categoria: " + this.categoria +"\n";
 							  

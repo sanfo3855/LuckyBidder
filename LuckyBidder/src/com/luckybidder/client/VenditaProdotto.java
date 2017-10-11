@@ -128,6 +128,7 @@ public class VenditaProdotto extends HorizontalPanel{
 				String stato = "APERTA";
 				String vincitore = "Nessuno";
 				String nomeMigliore = "Nessuno";
+				String username = Session.getInstance().getSession().getUsername();
 				
 				
 				int index = lCategoria.getSelectedIndex();
@@ -145,6 +146,7 @@ public class VenditaProdotto extends HorizontalPanel{
 					newProdotto.setStato(stato);
 					newProdotto.setVincitore(vincitore);
 					newProdotto.setNomePropostaMigliore(nomeMigliore);
+					newProdotto.setUsername(username);
 					
 					
 					

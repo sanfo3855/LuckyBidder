@@ -201,7 +201,7 @@ public class VenditaProdotto extends HorizontalPanel{
 		});
 		
 		decoratorpanel.add(verticalpanel);
-		decoratorpanel.getElement().setAttribute("style", "margin-left: 39vw; margin-top: 10vh;");
+		decoratorpanel.getElement().setAttribute("style", "margin: 10px;");
 		this.add(decoratorpanel);
 		
 	}

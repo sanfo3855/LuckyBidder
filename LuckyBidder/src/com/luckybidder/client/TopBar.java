@@ -28,19 +28,21 @@ public class TopBar extends VerticalPanel {
 		Button homeButton = new Button("HOME");
 		Button logoutButton = new Button("LOGOUT");
 		Button profiloButton = new Button("PROFILO");
+		Button vendiProdottoButton = new Button("VENDI PRODOTTO");
 		Button gestioneCategorieButton = new Button("GESTIONE CATEGORIE");
 		
 
 		logoutButton.getElement().setAttribute("style", "margin-right: 5px; margin-left: 5px;");
 		homeButton.getElement().setAttribute("style", "margin-left: 5px; margin-right: 5px;");
 		profiloButton.getElement().setAttribute("style", "margin-left: 5px; margin-right: 5px;");
+		vendiProdottoButton.getElement().setAttribute("style", "margin-left: 5px; margin-right: 5px;");
 		horizontalPanel.add(homeButton);
 		
 		if(Session.getInstance().getSession()!=null) {
 			if(!Session.getInstance().getSession().getUsername().equals("admin")){
 				horizontalPanel.add(profiloButton);
 				profiloButton.addClickHandler( new ClickHandler() {
-
+				
 					@Override
 					public void onClick(ClickEvent event) {
 						TopBar topbar = new TopBar();
@@ -50,6 +52,18 @@ public class TopBar extends VerticalPanel {
 						RootPanel.get().add(profilo);
 					}
 					
+				});
+				horizontalPanel.add(vendiProdottoButton);
+				vendiProdottoButton.addClickHandler( new ClickHandler() {
+				
+					@Override
+					public void onClick(ClickEvent event) {
+						TopBar topbar = new TopBar();
+						VenditaProdotto venditaProdotto = new VenditaProdotto();
+						RootPanel.get().clear();
+						RootPanel.get().add(topbar);
+						RootPanel.get().add(venditaProdotto);
+					}
 				});
 			} else {
 				horizontalPanel.add(gestioneCategorieButton);

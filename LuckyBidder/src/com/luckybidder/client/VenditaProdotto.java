@@ -1,17 +1,28 @@
 package com.luckybidder.client;
 
 import com.google.gwt.user.client.ui.Label;
+
+import java.util.Date;
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.datepicker.client.DateBox;
+import com.luckybidder.shared.Prodotto;
 
 public class VenditaProdotto extends HorizontalPanel{
 	private TextBox tNomeOggetto;
@@ -24,6 +35,8 @@ public class VenditaProdotto extends HorizontalPanel{
 		
 		final DecoratorPanel decoratorpanel = new DecoratorPanel();
 		final VerticalPanel verticalpanel = new VerticalPanel();
+		
+		final LuckyBidderServiceAsync instanceLuckyBidderService = LuckyBidderService.Util.getInstance();
 		
 		Grid grid = new Grid(5,3);
 		verticalpanel.setCellHorizontalAlignment(grid, HasHorizontalAlignment.ALIGN_CENTER);
@@ -51,6 +64,17 @@ public class VenditaProdotto extends HorizontalPanel{
 		//PREZZO VENDITA
 		Label labelPrezzoV = new Label("Prezzo base di vendita");
 		tPrezzoVendita = new TextBox();
+		tPrezzoVendita.addKeyPressHandler(new KeyPressHandler() {
+		    public void onKeyPress(KeyPressEvent event) {
+		        String input = tPrezzoVendita.getText();
+		        if (!input.matches("[0-9]*")) {
+		        	PopupPanel popup = new PopupPanel(true);
+					popup.setWidget(new HTML("<font color='red'>Inserire prezzo non caratteri<br></font>"));
+					popup.center();
+		            return;
+		        }
+		    }
+		});
 		tPrezzoVendita.setWidth("150px");
 		Label requiredPrezzoV = new Label("(*)");
 		grid.setWidget(2, 0, labelPrezzoV);
@@ -82,11 +106,8 @@ public class VenditaProdotto extends HorizontalPanel{
 		grid.setWidget(4, 2, requiredCategoria);
 		
 		verticalpanel.add(grid);
-		decoratorpanel.add(verticalpanel);
-		//decoratorpanel.getElement().setAttribute("style", "margin-left: 39vw; margin-top: 10vh;");
-		this.add(decoratorpanel);
 		
-		//BOTTONE METTI IN VENDITA
+		//BOTTONE METTI IN VENDITA E torna alla HomeProfile
 		Grid gridButton = new Grid(1,2);
 		Button bVendita = new Button("Metti in vendita");
 		Button bturnHome = new Button("← Torna alla Home");
@@ -96,6 +117,92 @@ public class VenditaProdotto extends HorizontalPanel{
 		
 		verticalpanel.add(gridButton);
 		
+		bVendita.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				
+				
+				String nomeOggetto = tNomeOggetto.getValue();
+				String descrizione = tDescrizione.getValue();
+				Double prezzoBase = Double.parseDouble(tPrezzoVendita.getValue());
+				Date dataFine = tScadenzaAsta.getValue();
+				String stato = "APERTA";
+				String vincitore = "Nessuno";
+				String nomeMigliore = "Nessuno";
+				String username = Session.getInstance().getSession().getUsername();
+				
+				
+				int index = lCategoria.getSelectedIndex();
+				String categoria = lCategoria.getValue(index);
+				
+				if(!nomeOggetto.isEmpty() && !descrizione.isEmpty() && 
+						prezzoBase != null && dataFine != null && !categoria.isEmpty()) {
+					
+					final Prodotto newProdotto = new Prodotto();
+					newProdotto.setNomeProdotto(nomeOggetto);
+					newProdotto.setDescrizione(descrizione);
+					newProdotto.setBaseAsta(prezzoBase);
+					newProdotto.setDataScadenza(dataFine);
+					newProdotto.setCategoria(categoria);
+					newProdotto.setStato(stato);
+					newProdotto.setVincitore(vincitore);
+					newProdotto.setNomePropostaMigliore(nomeMigliore);
+					newProdotto.setUsername(username);
+					
+					
+					
+					instanceLuckyBidderService.vendiProdotto(newProdotto, new AsyncCallback<Boolean>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							
+							PopupPanel popup = new PopupPanel(true);
+							popup.setWidget(new HTML("<font color='red'>Impossibile inserire una nuova registrazione: Errore nella connessione con il server.<br>"+caught+"</font>"));
+							popup.center();
+							
+						}
+
+						@Override
+						public void onSuccess(Boolean result) {
+							if(result==true) {
+	
+								TopBar topbar = new TopBar();
+								RootPanel.get().clear();
+								RootPanel.get().add(topbar);
+								VenditaProdotto venditaProdotto = new VenditaProdotto();
+								RootPanel.get().add(venditaProdotto);	
+								
+								PopupPanel popup = new PopupPanel(true);
+								popup.setWidget(new HTML("<font color='Black'>Messo in vendita</font>"));
+								popup.center();
+							}
+						}
+					});
+					
+				} else {
+					PopupPanel popup = new PopupPanel(true);
+					popup.setWidget(new HTML("I campi contrassegnati con (*) sono obbligatori!"));
+					popup.center();
+				}
 			
+			}
+				
+		});	
+		
+		bturnHome.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				TopBar topbar = new TopBar();
+				Profilo profilo = new Profilo();
+				RootPanel.get().clear();
+				RootPanel.get().add(topbar);
+				RootPanel.get().add(profilo);
+			}
+			
+		});
+		
+		decoratorpanel.add(verticalpanel);
+		decoratorpanel.getElement().setAttribute("style", "margin-left: 39vw; margin-top: 10vh;");
+		this.add(decoratorpanel);
+		
 	}
 }

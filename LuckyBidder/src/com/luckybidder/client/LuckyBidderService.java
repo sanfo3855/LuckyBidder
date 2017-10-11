@@ -23,9 +23,10 @@ public interface LuckyBidderService extends RemoteService{
 	}
 	
 	boolean registraUtente(Utente utente);
+	boolean vendiProdotto(Prodotto prodotto);
 	
 	boolean aggiungiCategoria(Categoria categoria);
 
-	Utente loginUtente(String username, String password);
+	Utente loginUtente(String username, String password); 
 	
 }

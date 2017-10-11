@@ -122,7 +122,7 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 			Categoria nuovaCategoria = new Categoria(padre, id, nomeCategoria);
 			mapCategorie.put(id,nuovaCategoria);	
 			dbCategorie.commit();
-			System.out.println("Registrazione - Categoria : " + nuovaCategoria.toString());
+			System.out.println("Aggiunta Categoria : " + nuovaCategoria.toString());
 			return true; 	
 		}
 		else 			

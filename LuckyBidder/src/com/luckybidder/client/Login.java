@@ -80,11 +80,18 @@ public class Login extends HorizontalPanel {
 					public void onSuccess(Utente result) {
 						if(result!=null) {
 							Session.getInstance().setSession(result);
-							TopBar topbar = new TopBar();
-							Profilo profilo = new Profilo();
 							RootPanel.get().clear();
+							TopBar topbar = new TopBar();
 							RootPanel.get().add(topbar);
-							RootPanel.get().add(profilo);
+							if(!result.getUsername().equals("admin")) {
+								Profilo profilo = new Profilo();
+								RootPanel.get().add(profilo);
+							} else {
+								GestioneCategorie gestioneCategorie = new GestioneCategorie();
+								RootPanel.get().add(gestioneCategorie);
+							}
+							
+							
 						} else {
 							TopBar topbar = new TopBar();
 							Login login = new Login();

@@ -1,10 +1,7 @@
 package com.luckybidder.client;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.luckybidder.shared.*;
 
 public class LuckyBidder implements EntryPoint {
 	
@@ -18,11 +15,6 @@ public class LuckyBidder implements EntryPoint {
 		
 		TopBar topbar = new TopBar();
 		rootpanel.add(topbar);
-		//Login login = new Login();
-		//rootpanel.add(login);
-		
-		/*Profilo profilo = new Profilo ();
-		rootpanel.add(profilo);*/
 	
 
 		Login login = new Login();

@@ -17,7 +17,6 @@ import com.luckybidder.shared.*;
 public class TopBar extends VerticalPanel {
 	
 	public String SESSION;
-	private Label labelNome;
 	
 	public TopBar() {
 		
@@ -28,23 +27,65 @@ public class TopBar extends VerticalPanel {
 		
 		Button homeButton = new Button("HOME");
 		Button logoutButton = new Button("LOGOUT");
-		labelNome = new Label("");
+		Button profiloButton = new Button("PROFILO");
+		Button gestioneCategorieButton = new Button("GESTIONE CATEGORIE");
 		
 
-		logoutButton.getElement().setAttribute("style", "margin-right: 5px; margin-left: 88.5vw");
-		homeButton.getElement().setAttribute("style", "margin-left: 5px");
-		
+		logoutButton.getElement().setAttribute("style", "margin-right: 5px; margin-left: 5px;");
+		homeButton.getElement().setAttribute("style", "margin-left: 5px; margin-right: 5px;");
+		profiloButton.getElement().setAttribute("style", "margin-left: 5px; margin-right: 5px;");
 		horizontalPanel.add(homeButton);
+		
 		if(Session.getInstance().getSession()!=null) {
-			DecoratorPanel decNome = new DecoratorPanel();
-			HTMLPanel labelNome = new HTMLPanel("<center>Loggato come: <b>"+Session.getInstance().getSession().getUsername()+"</b></center>");
-			decNome.add(labelNome);
-			decNome.getElement().setAttribute("style", "float: right; margin-right: 10px; margin-bottom; 10px");
-			this.add(decNome);
-			this.add(new HTMLPanel("<br>"));
+			if(!Session.getInstance().getSession().getUsername().equals("admin")){
+				horizontalPanel.add(profiloButton);
+				profiloButton.addClickHandler( new ClickHandler() {
+
+					@Override
+					public void onClick(ClickEvent event) {
+						TopBar topbar = new TopBar();
+						Profilo profilo = new Profilo();
+						RootPanel.get().clear();
+						RootPanel.get().add(topbar);
+						RootPanel.get().add(profilo);
+					}
+					
+				});
+			} else {
+				horizontalPanel.add(gestioneCategorieButton);
+				gestioneCategorieButton.addClickHandler( new ClickHandler() {
+
+					@Override
+					public void onClick(ClickEvent event) {
+						TopBar topbar = new TopBar();
+						GestioneCategorie gestioneCategorie = new GestioneCategorie();
+						RootPanel.get().clear();
+						RootPanel.get().add(topbar);
+						RootPanel.get().add(gestioneCategorie);
+					}
+					
+				});
+			}
+			horizontalPanel.add(logoutButton);
+			Label labelNome = new Label("Loggato come: " +Session.getInstance().getSession().getUsername());
+			labelNome.getElement().setAttribute("style", "margin-left: 5px; margin-right: 5px;");
+			horizontalPanel.add(labelNome);
+			logoutButton.addClickHandler( new ClickHandler() {
+
+				@Override
+				public void onClick(ClickEvent event) {
+					Session.getInstance().setSession(null);
+					TopBar topbar = new TopBar();
+					Login login = new Login();
+					RootPanel.get().clear();
+					RootPanel.get().add(topbar);
+					RootPanel.get().add(login);
+				}
+				
+			});
+			
 			
 		}
-		horizontalPanel.add(logoutButton);
 		decoratorTopbar.add(horizontalPanel);
 		
 		homeButton.addClickHandler( new ClickHandler() {
@@ -61,19 +102,7 @@ public class TopBar extends VerticalPanel {
 			
 		});
 		
-		logoutButton.addClickHandler( new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				Session.getInstance().setSession(null);
-				TopBar topbar = new TopBar();
-				Login login = new Login();
-				RootPanel.get().clear();
-				RootPanel.get().add(topbar);
-				RootPanel.get().add(login);
-			}
-			
-		});
+		
 		
 		
 		

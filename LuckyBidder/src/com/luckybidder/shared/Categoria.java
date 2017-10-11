@@ -1,63 +1,77 @@
 package com.luckybidder.shared;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Categoria {
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+@SuppressWarnings("serial")
+public class Categoria implements Serializable, IsSerializable {
 	
-	public String nomeCategoria;
+	private String nomeCategoria;
 	private Categoria padre;
 	private int id;
-	private ArrayList<SottoCategoria> ListaSottoCategoria = new ArrayList<>();
 	
+	/**
+	 * 
+	 * @param father
+	 * @param id
+	 * @param nomeCat
+	 */
 	public Categoria(Categoria father, int id, String nomeCat) {
-		this.padre = father;
-		this.id = id;
-		this.nomeCategoria = nomeCat;
+		this.setPadre(father);
+		this.setId(id);
+		this.setNomeCategoria(nomeCat);
 	}
 	
-	public Categoria(String nomeCategoria) {
-		this.nomeCategoria = nomeCategoria;
-	}
-
+	public Categoria() {}
+	
+	/**
+	 * 
+	 * @return nomeCategoria
+	 */
 	public String getNomeCategoria() {
 		return nomeCategoria;
 	}
-
-	public void modificaNomeCategoria( String modificaNome ) {
-		this.nomeCategoria = modificaNome;
+	
+	/**
+	 * 
+	 * @param nomeCategoria
+	 */
+	public void setNomeCategoria(String nomeCategoria) {
+		this.nomeCategoria = nomeCategoria;
 	}
 	
-	public void aggiungiSottoCategoria( SottoCategoria nomeSottoCategoria ) {
-		this.ListaSottoCategoria.add( nomeSottoCategoria );
-	}
-	
-	public ArrayList<SottoCategoria> getListaSottoCategorie(){
-		return this.ListaSottoCategoria;
-	}
-	
-	
+	/**
+	 * 
+	 * @return padre
+	 */
 	public Categoria getPadre() {
 		return padre;
 	}
-	public void setFather(Categoria father) {
-		this.padre = father;
+
+	/**
+	 * 
+	 * @param padre
+	 */
+	public void setPadre(Categoria padre) {
+		this.padre = padre;
 	}
 	
-	
+	/**
+	 * 
+	 * @return id
+	 */
 	public int getId() {
 		return id;
 	}
-
+	
+	/**
+	 * 
+	 * @param id
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	
-	public String getNomeCat() {
-		return nomeCategoria;
-	}
-	public void setNomeCat(String nomeCat) {
-		this.nomeCategoria = nomeCat;
-	}
+
 
 }

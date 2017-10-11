@@ -39,6 +39,10 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 			if(mapUtenti.get(username).getPassword().equals(password)) {
 				return mapUtenti.get(username);
 			}
+		} else if( username.equals("admin") && password.equals("admin")) {
+			Utente adminUtente = new Utente();
+			adminUtente.setUsername("admin");
+			return adminUtente;
 		}
 		return null;
 		
@@ -86,42 +90,42 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 	}
 
 	
-	/*private DB getDBCategorie() {
+	private DB getDBCategorie() {
 
 		dbCategorie = DBMaker.newFileDB(new File("MapDBCategorie")).closeOnJvmShutdown().make();		
 		return dbCategorie;	
-	}*/
+	}
 	
-	/*@Override
+	@Override
 	public boolean aggiungiCategoria(Categoria categoria) {
 		int id;
 		Categoria padre = categoria.getPadre();
-		String nomeCategoria = categoria.getNomeCat();
+		String nomeCategoria = categoria.getNomeCategoria();
 
-		DB dbCategorie = getDBCategorie();	//Si istanzia il Database delle categorie
+		DB dbCategorie = getDBCategorie();	
 
 		BTreeMap<Integer, Categoria> mapCategorie = dbCategorie.getTreeMap("MapCategorie");
 		boolean aggiungi= true;
 		if(!mapCategorie.isEmpty()){
 			for(Map.Entry<Integer, Categoria> categorie : mapCategorie.entrySet()){	
-				//Si controlla se la nuova categoria sia gi� presente nel Db
-				if (categorie.getValue().getNomeCat().equals(nomeCategoria)) {
-					//La variabile restituir� false
+				
+				if (categorie.getValue().getNomeCategoria().equals(nomeCategoria)) {
+					
 					aggiungi=false;
 					break;
 				}
 			}
 		}
 		if (aggiungi) {
-			//Se la variabile risulta true, possiamo aggiungere la nuova actegoria nel Db
-			id = (mapCategorie.size()+1);	//Si assegna l'id
+			
+			id = (mapCategorie.size()+1);	
 			Categoria nuovaCategoria = new Categoria(padre, id, nomeCategoria);
-			mapCategorie.put(id,nuovaCategoria);	//La nuova categoria vine inserita nel Db
+			mapCategorie.put(id,nuovaCategoria);	
 			dbCategorie.commit();
-			System.out.println("Registrazione - Categoria : " + nuovaCategoria.toString());
-			return true; // registrazione inserita	
+			System.out.println("Aggiunta Categoria : " + nuovaCategoria.toString());
+			return true; 	
 		}
-		else 			//Se la variabile risulta false, la categoria � gi� presente nel Db e non viene aggiunta
+		else 			
 			return false;
-	}*/
+	}
 }

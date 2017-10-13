@@ -96,7 +96,7 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 	
 	private DB getDBOfferte() {
 
-		dbOfferte = DBMaker.newFileDB(new File("MapDBProdotti")).closeOnJvmShutdown().make();		
+		dbOfferte = DBMaker.newFileDB(new File("MapDBOfferte")).closeOnJvmShutdown().make();		
 		return dbOfferte;	
 	}
 	

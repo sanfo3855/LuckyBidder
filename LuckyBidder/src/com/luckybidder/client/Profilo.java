@@ -1,7 +1,5 @@
 package com.luckybidder.client;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -18,11 +16,8 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.gwt.view.client.SingleSelectionModel;
 import com.luckybidder.shared.Prodotto;
 import com.luckybidder.shared.Offerta;
-import com.luckybidder.shared.Prodotto.StatoAstaProdotto;
 
 public class Profilo extends HorizontalPanel{
 	String SESSION;

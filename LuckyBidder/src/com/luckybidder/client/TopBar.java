@@ -79,6 +79,7 @@ public class TopBar extends VerticalPanel {
 						RootPanel.get().add(venditaProdotto);
 					}
 				});
+				
 			} else {
 				horizontalPanel.add(gestioneCategorieButton);
 				gestioneCategorieButton.addClickHandler( new ClickHandler() {

@@ -31,7 +31,7 @@ public class Profilo extends HorizontalPanel{
 	public Profilo () {
 		DecoratorPanel decoratorpanel1 = new DecoratorPanel();
 		final VerticalPanel verticalpanel = new VerticalPanel();
-		
+		final VerticalPanel verticalPanelGeneral = new VerticalPanel();
 		final LuckyBidderServiceAsync instanceLuckyBidderService = LuckyBidderService.Util.getInstance();
 		
 		HTMLPanel htmlpanel = new HTMLPanel("<center><b>PROFILO</b></center>");
@@ -149,6 +149,41 @@ public class Profilo extends HorizontalPanel{
 		htmlpanel2.getElement().setAttribute("style", "padding: 5px");
 		verticalPanel2.add(htmlpanel2);
 		
+		final CellTable<Prodotto> table = new CellTable<Prodotto>();
+		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
+		table.setWidth("710px");
+		table.setColumnWidth(1, "270px");
+		table.setColumnWidth(1, "270px");
+		table.setColumnWidth(2, "270px");
+		
+		//COLONNA PRODOTTO
+		TextColumn<Prodotto> txtColName = new TextColumn<Prodotto>(){
+			@Override
+			public String getValue(Prodotto object) {
+				//Si caricano i nomi
+				return object.getNomeProdotto();
+			}
+		};
+		table.addColumn(txtColName, "Oggetto");
+		
+		//COLONNA STATO
+		TextColumn<Prodotto> txtColStato = new TextColumn<Prodotto>(){
+			@Override
+			public String getValue(Prodotto object) {
+				return object.getStato();
+			}
+		};
+		table.addColumn(txtColStato, "Stato");
+		
+		//COLONNA VINCITORE
+		TextColumn<Prodotto> txtColVincitore = new TextColumn<Prodotto>(){
+			@Override
+			public String getValue(Prodotto object) {
+				return object.getVincitore();
+			}
+		};
+		table.addColumn(txtColVincitore, "Vincitore");
+		
 		instanceLuckyBidderService.getProdottiVenduti(Session.getInstance().getSession().getUsername(), new AsyncCallback<ArrayList<Prodotto>>() {
 
 			@Override
@@ -162,51 +197,20 @@ public class Profilo extends HorizontalPanel{
 			@Override
 			public void onSuccess(ArrayList<Prodotto> result) {
 				ArrayList<Prodotto> prodotti = new ArrayList<Prodotto>(result);
-				CellTable<Prodotto> table = new CellTable<Prodotto>();
-				table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
-				table.setWidth("710px");
-				table.setColumnWidth(1, "270px");
-				table.setColumnWidth(1, "270px");
-				table.setColumnWidth(2, "270px");
 				
-				//COLONNA PRODOTTO
-				TextColumn<Prodotto> txtColName = new TextColumn<Prodotto>(){
-					@Override
-					public String getValue(Prodotto object) {
-						//Si caricano i nomi
-						return object.getNomeProdotto();
-					}
-				};
-				table.addColumn(txtColName, "Oggetto");
-				
-				//COLONNA STATO
-				TextColumn<Prodotto> txtColStato = new TextColumn<Prodotto>(){
-					@Override
-					public String getValue(Prodotto object) {
-						return object.getStato();
-					}
-				};
-				table.addColumn(txtColStato, "Stato");
-				
-				//COLONNA VINCITORE
-				TextColumn<Prodotto> txtColVincitore = new TextColumn<Prodotto>(){
-					@Override
-					public String getValue(Prodotto object) {
-						return object.getVincitore();
-					}
-				};
-				table.addColumn(txtColVincitore, "Vincitore");
 				table.setRowCount(prodotti.size(), true);
 				table.setRowData(0, prodotti);
 				
 				verticalPanel2.add(table);
 				decoratorpanel2.getElement().setAttribute("style", "margin-left: 1vw; margin-top: 1vh;");
 				decoratorpanel2.add(verticalPanel2);
+				verticalPanelGeneral.add(decoratorpanel2);
 				
 			}
 			
 		});
-		this.add(decoratorpanel2);
+		
+		//this.add(decoratorpanel2);
 		
 		
 		final DecoratorPanel decoratorpanel3 = new DecoratorPanel();
@@ -215,6 +219,42 @@ public class Profilo extends HorizontalPanel{
 		htmlpanel3.getElement().setAttribute("style", "padding: 5px");
 		verticalPanel3.add(htmlpanel3);
 		
+		//TABELLA OFFERTA
+		final CellTable<Offerta> tableOfferte = new CellTable<Offerta>();
+		tableOfferte.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+		tableOfferte.setWidth("710px");
+		tableOfferte.setColumnWidth(0, "270px");
+		tableOfferte.setColumnWidth(1, "270px");
+		tableOfferte.setColumnWidth(2, "270px");
+
+		//COLONNA ID PRODOTTO
+		TextColumn<Offerta> txtColId = new TextColumn<Offerta>() {
+			@Override
+			public String getValue(Offerta object) {
+				//Si carica l'id
+				return Integer.toString(object.getIdProdotto());
+			}
+		};
+		tableOfferte.addColumn(txtColId, "Id oggetto");
+
+		//COLONNA PREZZO
+		TextColumn<Offerta> txtColPrezzo = new TextColumn<Offerta>() {
+			@Override
+			public String getValue(Offerta object) {
+				//Si caricano gli importi
+				return Double.toString(object.getPrezzo());
+			}
+		};
+		tableOfferte.addColumn(txtColPrezzo, "Prezzo");
+
+		//COLONNA DATA
+		TextColumn<Offerta> txtColData = new TextColumn<Offerta>() {
+			@Override
+			public String getValue(Offerta object) {
+				return object.getData();
+			}
+		};
+		tableOfferte.addColumn(txtColData, "Data");
 		instanceLuckyBidderService.getOfferteFatte(Session.getInstance().getSession().getUsername(), new AsyncCallback<ArrayList<Offerta>>() {
 
 			@Override
@@ -228,44 +268,6 @@ public class Profilo extends HorizontalPanel{
 			@Override
 			public void onSuccess(ArrayList<Offerta> result) {
 				ArrayList<Offerta> offerte = new ArrayList<Offerta>(result);
-				
-				//TABELLA OFFERTA
-				CellTable<Offerta> tableOfferte = new CellTable<Offerta>();
-				tableOfferte.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
-				tableOfferte.setWidth("710px");
-				tableOfferte.setColumnWidth(0, "270px");
-				tableOfferte.setColumnWidth(1, "270px");
-				tableOfferte.setColumnWidth(2, "270px");
-
-				//COLONNA ID PRODOTTO
-				TextColumn<Offerta> txtColId = new TextColumn<Offerta>() {
-					@Override
-					public String getValue(Offerta object) {
-						//Si carica l'id
-						return Integer.toString(object.getIdProdotto());
-					}
-				};
-				tableOfferte.addColumn(txtColId, "Id oggetto");
-
-				//COLONNA PREZZO
-				TextColumn<Offerta> txtColPrezzo = new TextColumn<Offerta>() {
-					@Override
-					public String getValue(Offerta object) {
-						//Si caricano gli importi
-						return Double.toString(object.getPrezzo());
-					}
-				};
-				tableOfferte.addColumn(txtColPrezzo, "Prezzo");
-
-				//COLONNA DATA
-				TextColumn<Offerta> txtColData = new TextColumn<Offerta>() {
-					@Override
-					public String getValue(Offerta object) {
-						return object.getData();
-					}
-				};
-				tableOfferte.addColumn(txtColData, "Data");
-				
 				tableOfferte.setRowCount(offerte.size(), true);
 				
 			/*	final SingleSelectionModel<Offerta> selectionModel = new SingleSelectionModel<Offerta>();
@@ -290,11 +292,13 @@ public class Profilo extends HorizontalPanel{
 				verticalPanel3.add(tableOfferte);
 				
 				decoratorpanel3.getElement().setAttribute("style", "margin-left: 1vw; margin-top: 1vh;");
-				decoratorpanel3.add(verticalPanel3);	
+				decoratorpanel3.add(verticalPanel3);
+				verticalPanelGeneral.add(decoratorpanel3);
 			}
 		
 		});
-		this.add(decoratorpanel3);
+		//this.add(decoratorpanel3);
+		this.add(verticalPanelGeneral);
 	
 	}
 }

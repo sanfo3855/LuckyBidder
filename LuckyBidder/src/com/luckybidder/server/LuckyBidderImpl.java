@@ -165,7 +165,6 @@ public boolean modificaScadenza(Prodotto prodotto, int id) {
 		return dbProdotti;	
 	}
 	
-	
 	//prendo i prodotti messi in vendita per ogni utente
 	public ArrayList<Prodotto> getProdottiVenduti(String username) {
 		

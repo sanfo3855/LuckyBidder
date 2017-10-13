@@ -2,6 +2,7 @@ package com.luckybidder.client;
 
 import com.luckybidder.shared.*;
 
+import java.util.ArrayList;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -27,6 +28,9 @@ public interface LuckyBidderService extends RemoteService{
 	
 	boolean aggiungiCategoria(Categoria categoria);
 
-	Utente loginUtente(String username, String password); 
+	Utente loginUtente(String username, String password);
+	
+	ArrayList<Prodotto> getProdottiVenduti(String username);
+	ArrayList<Offerta> getOfferteFatte(String username);
 	
 }

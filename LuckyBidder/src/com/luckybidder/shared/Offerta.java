@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class Offerta {
 
+	private String username;
 	private double importo;
 	private Date dataOfferta;
 	private Prodotto prodotto;
@@ -13,6 +14,10 @@ public class Offerta {
 	
 	public Offerta() {
 		
+	}
+	
+	public String getUsername(){
+		return username;
 	}
 	
 	public String getData() {
@@ -49,5 +54,9 @@ public class Offerta {
 
 	public void setProdotto(Prodotto prodotto) {
 		this.prodotto = prodotto;
+	}
+	
+	public void setUsername(String username) {
+		this.username = username;
 	}
 }

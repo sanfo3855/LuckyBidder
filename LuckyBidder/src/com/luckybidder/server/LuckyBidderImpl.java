@@ -5,6 +5,7 @@ import com.luckybidder.client.LuckyBidderService;
 import com.luckybidder.shared.FieldVerifier;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -67,19 +68,19 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 		}
 	}
 	
-public boolean vendiProdotto(Prodotto prodotto) {
-		
-		dbProdotti = getDBProdotti();
-		BTreeMap<Integer, Prodotto> mapProdotti = dbProdotti.getTreeMap("MapProdotti");
-		int size = mapProdotti.size();
-		int id = size + 1;
-		prodotto.setIdProdotto(id);
-		mapProdotti.put(id, prodotto);
-		dbProdotti.commit();
-		dbProdotti.close();
-		System.out.println("Prodotto messo in vednita: " + prodotto.toString());
-		return true;
-}
+	public boolean vendiProdotto(Prodotto prodotto) {
+			
+			dbProdotti = getDBProdotti();
+			BTreeMap<Integer, Prodotto> mapProdotti = dbProdotti.getTreeMap("MapProdotti");
+			int size = mapProdotti.size();
+			int id = size + 1;
+			prodotto.setIdProdotto(id);
+			mapProdotti.put(id, prodotto);
+			dbProdotti.commit();
+			dbProdotti.close();
+			System.out.println("Prodotto messo in vednita: " + prodotto.toString());
+			return true;
+	}
 
 	private DB getDBUtenti() {
 
@@ -93,7 +94,51 @@ public boolean vendiProdotto(Prodotto prodotto) {
 		return dbProdotti;	
 	}
 	
+	private DB getDBOfferte() {
 
+		dbOfferte = DBMaker.newFileDB(new File("MapDBProdotti")).closeOnJvmShutdown().make();		
+		return dbOfferte;	
+	}
+	
+	//prendo i prodotti messi in vendita per ogni utente
+	public ArrayList<Prodotto> getProdottiVenduti(String username) {
+		
+		dbProdotti = getDBProdotti();
+		BTreeMap<Integer, Prodotto> mapProdotti = dbProdotti.getTreeMap("MapProdotti");
+		Prodotto prodottoEstratto = new Prodotto();
+		ArrayList<Prodotto> listaProdotti= new ArrayList<Prodotto>();
+		if(!mapProdotti.isEmpty()) {
+			for(Map.Entry<Integer, Prodotto> prodotto : mapProdotti.entrySet()) {
+				if(prodotto.getValue().getUsername().equals(username) && !(prodotto.getValue().getIdProdotto()==-1)) {
+					prodottoEstratto = prodotto.getValue();
+					listaProdotti.add(prodottoEstratto);
+				}
+			}
+			
+		}
+		return listaProdotti;
+	}
+	
+	//prendo le offerte fatte per ogni utente
+		public ArrayList<Offerta> getOfferteFatte(String username) {
+			
+			dbOfferte = getDBOfferte();
+			
+			BTreeMap<Integer, Offerta> mapOfferte = dbOfferte.getTreeMap("MapOfferte");
+			Offerta offertaFatta = new Offerta();
+			ArrayList<Offerta> listaOfferte= new ArrayList<Offerta>();
+			if(!mapOfferte.isEmpty()) {
+				for(Map.Entry<Integer, Offerta> offerta : mapOfferte.entrySet()){
+					if(offerta.getValue().getUsername().equals(username) && !(offerta.getValue().getIdProdotto()==-1)) {
+						offertaFatta = offerta.getValue();
+						listaOfferte.add(offertaFatta);
+					}
+				}
+				
+			}
+			return listaOfferte;
+		}
+	
 	/**
 	 * Escape an html string. Escaping data received from the client helps to
 	 * prevent cross-site script vulnerabilities.

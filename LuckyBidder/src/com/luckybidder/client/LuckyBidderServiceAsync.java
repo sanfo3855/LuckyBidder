@@ -2,6 +2,8 @@ package com.luckybidder.client;
 
 import com.luckybidder.shared.*;
 
+import java.util.ArrayList;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface LuckyBidderServiceAsync {
@@ -12,5 +14,7 @@ public interface LuckyBidderServiceAsync {
 	void aggiungiCategoria(Categoria categoria, AsyncCallback<Boolean> callback);
 
 	void loginUtente(String username, String password, AsyncCallback<Utente> callback);
-
+	
+	void getProdottiVenduti(String username, AsyncCallback<ArrayList<Prodotto>> callback);
+	void getOfferteFatte(String username, AsyncCallback<ArrayList<Offerta>> callback );
 }

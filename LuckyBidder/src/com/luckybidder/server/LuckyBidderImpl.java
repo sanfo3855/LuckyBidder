@@ -1,6 +1,5 @@
 package com.luckybidder.server;
 
-import com.luckybidder.client.GreetingService;
 import com.luckybidder.client.LuckyBidderService;
 import com.luckybidder.shared.FieldVerifier;
 

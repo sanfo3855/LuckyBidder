@@ -14,7 +14,9 @@ import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 
 public class OffertaProdotto extends DialogBox {
 	
-	public OffertaProdotto() {
+	public OffertaProdotto(final int id) {
+		
+		final LuckyBidderServiceAsync instanceLuckyBidderService = LuckyBidderService.Util.getInstance();
 		
 		final DoubleBox prezzoOfferta = new DoubleBox();
 		final Button btnOffri = new Button("");

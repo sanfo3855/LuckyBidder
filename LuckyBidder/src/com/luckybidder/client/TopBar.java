@@ -38,6 +38,20 @@ public class TopBar extends VerticalPanel {
 		vendiProdottoButton.getElement().setAttribute("style", "margin-left: 5px; margin-right: 5px;");
 		horizontalPanel.add(homeButton);
 		
+		homeButton.addClickHandler( new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				TopBar topbar = new TopBar();
+				HomeProdotti homeprodotti = new HomeProdotti();
+				RootPanel.get().clear();
+				RootPanel.get().add(topbar);
+				RootPanel.get().add(homeprodotti);	
+			}
+			
+		});
+		
+
 		if(Session.getInstance().getSession()!=null) {
 			if(!Session.getInstance().getSession().getUsername().equals("admin")){
 				horizontalPanel.add(profiloButton);
@@ -97,27 +111,12 @@ public class TopBar extends VerticalPanel {
 					RootPanel.get().add(login);
 				}
 				
-			});
-			
-			
+			});		
 		}
+		
+		
+		
 		decoratorTopbar.add(horizontalPanel);
-		
-		homeButton.addClickHandler( new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				TopBar topbar = new TopBar();
-				//Home home = new Home();
-				RootPanel.get().clear();
-				RootPanel.get().add(topbar);
-				RootPanel.get().add(new HTMLPanel("<center>HOME</center>"));
-				
-			}
-			
-		});
-		
-		
 		
 		
 		

@@ -1,22 +1,23 @@
 package com.luckybidder.client;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.luckybidder.shared.Prodotto;
 import com.luckybidder.shared.Offerta;
-import com.luckybidder.shared.Prodotto.StatoAstaProdotto;
 
 public class Profilo extends HorizontalPanel{
 	String SESSION;
@@ -25,7 +26,7 @@ public class Profilo extends HorizontalPanel{
 	public Profilo () {
 		DecoratorPanel decoratorpanel1 = new DecoratorPanel();
 		final VerticalPanel verticalpanel = new VerticalPanel();
-		
+		final VerticalPanel verticalPanelGeneral = new VerticalPanel();
 		final LuckyBidderServiceAsync instanceLuckyBidderService = LuckyBidderService.Util.getInstance();
 		
 		HTMLPanel htmlpanel = new HTMLPanel("<center><b>PROFILO</b></center>");
@@ -137,20 +138,15 @@ public class Profilo extends HorizontalPanel{
 		decoratorpanel1.getElement().setAttribute("style", "margin-left: 1vw; margin-top: 1vh;");
 		this.add(decoratorpanel1);
 		
-		DecoratorPanel decoratorpanel2 = new DecoratorPanel();
+		final DecoratorPanel decoratorpanel2= new DecoratorPanel();
 		final VerticalPanel verticalPanel2 = new VerticalPanel();
-		verticalPanel2.setSize("300px", "352px");
-		
-		
 		HTMLPanel htmlpanel2 = new HTMLPanel("<center><b>VENDITE</b></center>");
 		htmlpanel2.getElement().setAttribute("style", "padding: 5px");
 		verticalPanel2.add(htmlpanel2);
 		
-		ArrayList<Prodotto> prodotti = new ArrayList<Prodotto>();
-		
-		CellTable<Prodotto> table = new CellTable<Prodotto>();
+		final CellTable<Prodotto> table = new CellTable<Prodotto>();
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
-		table.setWidth("810px");
+		table.setWidth("710px");
 		table.setColumnWidth(1, "270px");
 		table.setColumnWidth(1, "270px");
 		table.setColumnWidth(2, "270px");
@@ -183,22 +179,45 @@ public class Profilo extends HorizontalPanel{
 		};
 		table.addColumn(txtColVincitore, "Vincitore");
 		
+		instanceLuckyBidderService.getProdottiVenduti(Session.getInstance().getSession().getUsername(), new AsyncCallback<ArrayList<Prodotto>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				PopupPanel popup = new PopupPanel(true);
+				popup.setWidget(new HTML("<font color='red'>Impossibile estrarre le informazioni: Errore nella connessione con il server</font>"));
+				popup.center();
+				
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Prodotto> result) {
+				ArrayList<Prodotto> prodotti = new ArrayList<Prodotto>(result);
+				
+				table.setRowCount(prodotti.size(), true);
+				table.setRowData(0, prodotti);
+				
+				verticalPanel2.add(table);
+				decoratorpanel2.getElement().setAttribute("style", "margin-left: 1vw; margin-top: 1vh;");
+				decoratorpanel2.add(verticalPanel2);
+				verticalPanelGeneral.add(decoratorpanel2);
+				
+			}
+			
+		});
 		
-		table.setRowCount(prodotti.size(), true);
-		table.setRowData(0, prodotti);
+		//this.add(decoratorpanel2);
 		
-		verticalPanel2.add(table);
 		
+		final DecoratorPanel decoratorpanel3 = new DecoratorPanel();
+		final VerticalPanel verticalPanel3 = new VerticalPanel();
 		HTMLPanel htmlpanel3 = new HTMLPanel("<center><b>OFFERTE</b></center>");
 		htmlpanel3.getElement().setAttribute("style", "padding: 5px");
-		verticalPanel2.add(htmlpanel3);
-
-		ArrayList<Offerta> offerte = new ArrayList<Offerta>();
+		verticalPanel3.add(htmlpanel3);
 		
 		//TABELLA OFFERTA
-		CellTable<Offerta> tableOfferte = new CellTable<Offerta>();
+		final CellTable<Offerta> tableOfferte = new CellTable<Offerta>();
 		tableOfferte.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
-		tableOfferte.setWidth("810px");
+		tableOfferte.setWidth("710px");
 		tableOfferte.setColumnWidth(0, "270px");
 		tableOfferte.setColumnWidth(1, "270px");
 		tableOfferte.setColumnWidth(2, "270px");
@@ -231,25 +250,50 @@ public class Profilo extends HorizontalPanel{
 			}
 		};
 		tableOfferte.addColumn(txtColData, "Data");
+		instanceLuckyBidderService.getOfferteFatte(Session.getInstance().getSession().getUsername(), new AsyncCallback<ArrayList<Offerta>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				PopupPanel popup = new PopupPanel(true);
+				popup.setWidget(new HTML("<font color='red'>Impossibile estrarre le informazioni: Errore nella connessione con il server</font>"));
+				popup.center();
+				
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Offerta> result) {
+				ArrayList<Offerta> offerte = new ArrayList<Offerta>(result);
+				tableOfferte.setRowCount(offerte.size(), true);
+				
+			/*	final SingleSelectionModel<Offerta> selectionModel = new SingleSelectionModel<Offerta>();
+				tableOfferte.setSelectionModel(selectionModel);
+				//Alla selezione di un oggetto diverso
+				selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+					public void onSelectionChange(SelectionChangeEvent event) {
+						//Creiamo un oggetto Offerta con i valori della riga selazionata
+						Offerta selected = selectionModel.getSelectedObject();
+						//Se abbiamo selezionato una riga
+						if (selected != null) {
+							//visualizzeremo un popup contenente i dettagli dell'oggetto su cui � stata effettuata l'offerta
+							GestioneOfferta visualizzaInfo = new GestioneOfferta(selected.getIdProdotto(),Session.getInstance().getSession().getUsername());
+							visualizzaInfo.center();
+							visualizzaInfo.show();
+						}
+					}
+				});*/
+				
+				tableOfferte.setRowData(0, offerte);
+				
+				verticalPanel3.add(tableOfferte);
+				
+				decoratorpanel3.getElement().setAttribute("style", "margin-left: 1vw; margin-top: 1vh;");
+				decoratorpanel3.add(verticalPanel3);
+				verticalPanelGeneral.add(decoratorpanel3);
+			}
 		
-		tableOfferte.setRowCount(offerte.size(), true);
-		tableOfferte.setRowData(0, offerte);
-		
-		verticalPanel2.add(tableOfferte);
-		
-		decoratorpanel2.getElement().setAttribute("style", "margin-left: 1vw; margin-top: 1vh;");
-		decoratorpanel2.add(verticalPanel2);
-		this.add(decoratorpanel2);
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		});
+		//this.add(decoratorpanel3);
+		this.add(verticalPanelGeneral);
+	
 	}
 }

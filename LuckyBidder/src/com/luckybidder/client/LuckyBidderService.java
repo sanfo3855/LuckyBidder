@@ -24,7 +24,6 @@ public interface LuckyBidderService extends RemoteService{
 	}
 	
 	boolean registraUtente(Utente utente);
-	boolean vendiProdotto(Prodotto prodotto);
 	
 	boolean aggiungiCategoria(Categoria categoria);
 
@@ -32,5 +31,10 @@ public interface LuckyBidderService extends RemoteService{
 	
 	ArrayList<Prodotto> getProdottiVenduti(String username);
 	ArrayList<Offerta> getOfferteFatte(String username);
+
+	boolean vendiProdotto(Prodotto prodotto);
+
+	ArrayList<Prodotto> getProdotti(); 
+
 	
 }

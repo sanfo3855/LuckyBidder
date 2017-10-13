@@ -9,6 +9,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface LuckyBidderServiceAsync {
 
 	void registraUtente(Utente utente, AsyncCallback<Boolean> callback);
+	
 	void vendiProdotto(Prodotto prodotto, AsyncCallback<Boolean> callback);
 
 	void aggiungiCategoria(Categoria categoria, AsyncCallback<Boolean> callback);
@@ -17,4 +18,8 @@ public interface LuckyBidderServiceAsync {
 	
 	void getProdottiVenduti(String username, AsyncCallback<ArrayList<Prodotto>> callback);
 	void getOfferteFatte(String username, AsyncCallback<ArrayList<Offerta>> callback );
+
+
+	void getProdotti(AsyncCallback<ArrayList<Prodotto>> callback);
+
 }

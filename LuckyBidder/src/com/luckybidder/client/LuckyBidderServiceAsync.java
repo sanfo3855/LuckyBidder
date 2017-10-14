@@ -12,7 +12,7 @@ public interface LuckyBidderServiceAsync {
 	
 	void vendiProdotto(Prodotto prodotto, AsyncCallback<Boolean> callback);
 
-	void aggiungiCategoria(Categoria categoria, AsyncCallback<Boolean> callback);
+	void aggiungiCategoria(Categoria categoria, String padre, AsyncCallback<Boolean> callback);
 
 	void loginUtente(String username, String password, AsyncCallback<Utente> callback);
 	
@@ -21,5 +21,7 @@ public interface LuckyBidderServiceAsync {
 
 
 	void getProdotti(AsyncCallback<ArrayList<Prodotto>> callback);
+
+	void getCategorie(AsyncCallback<Categoria> asyncCallback);
 
 }

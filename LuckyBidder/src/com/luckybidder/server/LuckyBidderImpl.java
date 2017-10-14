@@ -223,37 +223,104 @@ public boolean modificaScadenza(Prodotto prodotto, int id) {
 		dbCategorie = DBMaker.newFileDB(new File("MapDBCategorie")).closeOnJvmShutdown().make();		
 		return dbCategorie;	
 	}
-	
-	@Override
-	public boolean aggiungiCategoria(Categoria categoria) {
-		int id;
-		Categoria padre = categoria.getPadre();
-		String nomeCategoria = categoria.getNomeCategoria();
 
-		DB dbCategorie = getDBCategorie();	
-
-		BTreeMap<Integer, Categoria> mapCategorie = dbCategorie.getTreeMap("MapCategorie");
+	public boolean aggiungiCategoria(Categoria categoria, String padre) {
+		dbCategorie = getDBCategorie();
+		BTreeMap<Integer, Categoria> mapCategorie = dbCategorie.getTreeMap("MapDBCategorie");
 		boolean aggiungi= true;
-		if(!mapCategorie.isEmpty()){
+		
+		if(!mapCategorie.isEmpty()) {
 			for(Map.Entry<Integer, Categoria> categorie : mapCategorie.entrySet()){	
-				
-				if (categorie.getValue().getNomeCategoria().equals(nomeCategoria)) {
-					
+				if (categorie.getValue().getNomeCategoria().equals(categoria.getNomeCategoria())) {
 					aggiungi=false;
+					System.out.print("Categorie gia esistente");
 					break;
 				}
 			}
 		}
+		
 		if (aggiungi) {
+			System.out.println("Devo inserire la categoria");
+			int id = (mapCategorie.size()+1);
+			boolean catPadreCheck = false;
+			Categoria catPadre = null;
+			categoria.setId(id);
 			
-			id = (mapCategorie.size()+1);	
-			Categoria nuovaCategoria = new Categoria(padre, id, nomeCategoria);
-			mapCategorie.put(id,nuovaCategoria);	
+			if(padre==null) {
+				System.out.println("Padre null");
+				catPadreCheck = true;
+			} else {
+				System.out.println("Cerco padre...");
+				if(!mapCategorie.isEmpty()) {
+					for(Map.Entry<Integer, Categoria> categorie: mapCategorie.entrySet()) {
+						if(categorie.getValue().getNomeCategoria().equals(padre)) {
+							catPadreCheck = true;
+							System.out.println("Padre trovato");
+							catPadre = categorie.getValue();
+							System.out.println(catPadre.toString()+"\n");
+						}
+					}
+				}
+			}
+			if(catPadreCheck) {
+				categoria.setPadre(catPadre);
+				mapCategorie.put(id,categoria);
+				if(catPadre != null) {
+					System.out.println("Padre != null");
+					for(Map.Entry<Integer, Categoria> categorie: mapCategorie.entrySet()) {
+						if(categorie.getValue().getNomeCategoria().equals(padre)) {
+							System.out.println("Padre trovato!!");
+							Categoria p = categorie.getValue();
+							p.setCategoriaFiglia(categoria);
+							
+							System.out.println(p.toString()+"\n");
+							mapCategorie.remove(p.getId());
+							mapCategorie.put(p.getId(), p);
+							
+						}
+					}
+				}
+			} else {
+				System.out.println("Check padre esistente false");
+				return false;
+			}
 			dbCategorie.commit();
-			System.out.println("Aggiunta Categoria : " + nuovaCategoria.toString());
+			System.out.println("Aggiunta Categoria : " + categoria.toString());
 			return true; 	
 		}
-		else 			
+		else {
+			System.out.println("Aggiungi false");
 			return false;
+		}
+			
+	}
+	
+	
+	private Categoria processTree(ArrayList<Categoria> list){;
+		if(list == null ) {
+			return null;
+		} else {
+			for(Categoria pointed : list) {
+				if(pointed.getCategorieFiglie()!=null) {
+					processTree(pointed.getCategorieFiglie());
+				}
+			}
+		}
+		return null;
+	}
+	
+	public Categoria getCategorie(){
+		dbCategorie = getDBCategorie();
+		BTreeMap<Integer, Categoria> mapCategorie = dbCategorie.getTreeMap("MapDBCategorie");
+		
+		
+		ArrayList<Categoria> list = new ArrayList<Categoria>();
+		if(!mapCategorie.isEmpty()) {
+			for(Map.Entry<Integer, Categoria> categoria : mapCategorie.entrySet()) {
+				list.add(categoria.getValue());
+			}
+		}
+		//processTree(list);
+		return null;		
 	}
 }

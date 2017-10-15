@@ -233,7 +233,7 @@ public boolean modificaScadenza(Prodotto prodotto, int id) {
 			for(Map.Entry<Integer, Categoria> categorie : mapCategorie.entrySet()){	
 				if (categorie.getValue().getNomeCategoria().equals(categoria.getNomeCategoria())) {
 					aggiungi=false;
-					System.out.print("Categorie gia esistente");
+					System.out.println("Categorie gia esistente");
 					break;
 				}
 			}
@@ -289,6 +289,7 @@ public boolean modificaScadenza(Prodotto prodotto, int id) {
 			return true; 	
 		}
 		else {
+			dbCategorie.commit();
 			System.out.println("Aggiungi false");
 			return false;
 		}
@@ -314,13 +315,17 @@ public boolean modificaScadenza(Prodotto prodotto, int id) {
 		BTreeMap<Integer, Categoria> mapCategorie = dbCategorie.getTreeMap("MapDBCategorie");
 		
 		
-		ArrayList<Categoria> list = new ArrayList<Categoria>();
+		Categoria root = new Categoria("ROOT");
 		if(!mapCategorie.isEmpty()) {
 			for(Map.Entry<Integer, Categoria> categoria : mapCategorie.entrySet()) {
-				list.add(categoria.getValue());
+				if(categoria.getValue().getPadre()==null) {
+					root.setCategoriaFiglia(categoria.getValue());
+				}
+				
 			}
 		}
-		//processTree(list);
-		return null;		
+		System.out.println(root.toString());
+		
+		return root;		
 	}
 }

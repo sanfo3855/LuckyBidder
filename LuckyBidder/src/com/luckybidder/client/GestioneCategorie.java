@@ -36,12 +36,12 @@ public class GestioneCategorie extends VerticalPanel {
 		hpAggiungiCategoria.add(tAggiungiCategoria);
 		hpAggiungiCategoria.add(bAggiungiCategoria);
 		
-		/*bAggiungiCategoria.addClickHandler( new ClickHandler() {
+		bAggiungiCategoria.addClickHandler( new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 				Categoria addCategoria = new Categoria(tAggiungiCategoria.getValue());
-				instanceLuckyBidderService.aggiungiCategoria(addCategoria, new AsyncCallback<Boolean>() {
+				instanceLuckyBidderService.aggiungiCategoria(addCategoria, null, new AsyncCallback<Boolean>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -74,10 +74,10 @@ public class GestioneCategorie extends VerticalPanel {
 				
 			}
 			
-		});*/
+		});
 		hpAggiungiCategoria.getElement().setAttribute("style", "margin-bottom: 10px");
 		
-		Categoria informatica = new Categoria("informatica");
+		/*Categoria informatica = new Categoria("informatica");
 		Categoria cucina = new Categoria("cucina");
 		Categoria abbigliamento = new Categoria("abbigliamento");
 		//livello 1
@@ -120,9 +120,10 @@ public class GestioneCategorie extends VerticalPanel {
 				public void onSuccess(Boolean result) {
 					GWT.log(""+result);
 					
+					
 				}
 				
-		});
+		});*/
 		/*****************
 		 * GET CATEGORIE *
 		 *****************/

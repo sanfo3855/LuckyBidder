@@ -19,7 +19,10 @@ public interface LuckyBidderServiceAsync {
 	void getProdottiVenduti(String username, AsyncCallback<ArrayList<Prodotto>> callback);
 	void getOfferteFatte(String username, AsyncCallback<ArrayList<Offerta>> callback );
 
-
+	void modificaScadenza(Prodotto prodotto,int id, AsyncCallback<Boolean> callback);
+	void getMaxOfferta(int id, AsyncCallback<Offerta> callback );
 	void getProdotti(AsyncCallback<ArrayList<Prodotto>> callback);
-
+	void getProdottoSingolo(int id, AsyncCallback<Prodotto> callback);
+	void offri(Offerta offerta, AsyncCallback<Boolean>callback);
+	void getOfferte(int idProdotto, AsyncCallback<ArrayList<Offerta>>callback);	
 }

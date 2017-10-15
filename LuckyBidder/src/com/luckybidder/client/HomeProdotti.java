@@ -24,6 +24,7 @@ public class HomeProdotti extends HorizontalPanel{
 		final LuckyBidderServiceAsync instanceLuckyBidderService = LuckyBidderService.Util.getInstance();
 		DecoratorPanel decoratorPanel = new DecoratorPanel();
 		final VerticalPanel verticalPanel = new VerticalPanel();
+		
 		instanceLuckyBidderService.getProdotti(new AsyncCallback<ArrayList<Prodotto>>(){
 			@Override
 			public void onFailure(Throwable caught) {
@@ -35,9 +36,6 @@ public class HomeProdotti extends HorizontalPanel{
 			
 			@Override
 			public void onSuccess(ArrayList<Prodotto> result) {
-				for(Prodotto p : result) {
-					GWT.log(p.toString());
-				}
 				
 				ArrayList<Prodotto> prodotti = new ArrayList<Prodotto>(result);
 				CellTable<Prodotto> table = new CellTable<Prodotto>();
@@ -75,7 +73,7 @@ public class HomeProdotti extends HorizontalPanel{
 					public void onSelectionChange(SelectionChangeEvent event) {
 						Prodotto selected = selectionModel.getSelectedObject();
 						if (selected != null) {
-							OffertaProdotto visualizzaInfo = new OffertaProdotto(selected.getIdProdotto());
+							OffertaProdotto visualizzaInfo = new OffertaProdotto(selected.getIdProdotto(),Session.getInstance().getSession().getUsername());
 							visualizzaInfo.center();
 							visualizzaInfo.show();
 						}

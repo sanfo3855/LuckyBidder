@@ -33,8 +33,14 @@ public interface LuckyBidderService extends RemoteService{
 	ArrayList<Offerta> getOfferteFatte(String username);
 
 	boolean vendiProdotto(Prodotto prodotto);
+	boolean modificaScadenza(Prodotto prodotto, int id);
+	Offerta getMaxOfferta(int id);
 
 	ArrayList<Prodotto> getProdotti(); 
+	Prodotto getProdottoSingolo(int id);
+	
+	boolean offri(Offerta offerta);
+	ArrayList <Offerta> getOfferte(int idProdotto);
 
 	
 }

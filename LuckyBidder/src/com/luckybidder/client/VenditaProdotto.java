@@ -95,11 +95,11 @@ public class VenditaProdotto extends HorizontalPanel{
 		Label labelCategoria = new Label("Categoria");
 		lCategoria = new ListBox();
 		lCategoria.setWidth("150px");
-		lCategoria.addItem("Abbigliamento");
-		lCategoria.addItem("Casa");
-		lCategoria.addItem("Elettronica");
-		lCategoria.addItem("Giardinaggio");
-		lCategoria.addItem("Sport");
+		lCategoria.addItem("casa");
+		lCategoria.addItem("eletronica");
+		lCategoria.addItem("giardinaggio");
+		lCategoria.addItem("sport");
+		lCategoria.addItem("abigliamento");
 		Label requiredCategoria = new Label("(*)");
 		grid.setWidget(4, 0, labelCategoria);
 		grid.setWidget(4, 1, lCategoria);
@@ -129,8 +129,6 @@ public class VenditaProdotto extends HorizontalPanel{
 				String vincitore = "Nessuno";
 				String nomeMigliore = "Nessuno";
 				String username = Session.getInstance().getSession().getUsername();
-				
-				
 				int index = lCategoria.getSelectedIndex();
 				String categoria = lCategoria.getValue(index);
 				

@@ -24,7 +24,7 @@ public interface LuckyBidderServiceAsync {
 	
 	void getCategoria(int id, AsyncCallback<Categoria> callback);
 
-	void getTreeCategorie(AsyncCallback<Categoria> callback);
+	void getAllCategorie(AsyncCallback<ArrayList<Categoria>> callback);
 	
 
 }

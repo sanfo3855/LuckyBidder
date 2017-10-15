@@ -39,7 +39,7 @@ public interface LuckyBidderService extends RemoteService{
 	
 	Categoria getCategoria(int idCategoria);
 	
-	Categoria getTreeCategorie();
+	ArrayList<Categoria> getAllCategorie();
 
 	
 }

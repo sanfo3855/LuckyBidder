@@ -248,6 +248,7 @@ public boolean modificaScadenza(Prodotto prodotto, int id) {
 			
 			if(padre==null) {
 				System.out.println("Padre null");
+				catPadre = new Categoria("null");
 				catPadreCheck = true;
 			} else {
 				System.out.println("Cerco padre...");
@@ -296,20 +297,6 @@ public boolean modificaScadenza(Prodotto prodotto, int id) {
 			
 	}
 	
-	
-	private Categoria processTree(ArrayList<Categoria> list){;
-		if(list == null ) {
-			return null;
-		} else {
-			for(Categoria pointed : list) {
-				if(pointed.getCategorieFiglie()!=null) {
-					processTree(pointed.getCategorieFiglie());
-				}
-			}
-		}
-		return null;
-	}
-	
 	public Categoria getCategoria(int idCategoria) {
 		dbCategorie = getDBCategorie();
 		BTreeMap<Integer, Categoria> mapCategorie = dbCategorie.getTreeMap("MapDBCategorie");
@@ -317,22 +304,18 @@ public boolean modificaScadenza(Prodotto prodotto, int id) {
 		return categoria;
 	}
 	
-	public Categoria getTreeCategorie(){
+	public ArrayList<Categoria> getAllCategorie(){
 		dbCategorie = getDBCategorie();
 		BTreeMap<Integer, Categoria> mapCategorie = dbCategorie.getTreeMap("MapDBCategorie");
 		
-		
+		ArrayList<Categoria> listCategorie = new ArrayList<Categoria>();
 		Categoria root = new Categoria("ROOT");
 		if(!mapCategorie.isEmpty()) {
 			for(Map.Entry<Integer, Categoria> categoria : mapCategorie.entrySet()) {
-				if(categoria.getValue().getPadre()==null) {
-					root.setCategoriaFiglia(categoria.getValue());
-				}
-				
+				listCategorie.add(categoria.getValue());		
 			}
 		}
-		System.out.println(root.toString());
-		
-		return root;		
+		//System.out.println(root.toString());
+		return listCategorie;		
 	}
 }

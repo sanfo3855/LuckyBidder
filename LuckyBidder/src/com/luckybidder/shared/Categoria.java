@@ -88,6 +88,6 @@ public class Categoria implements Serializable, IsSerializable {
 	
 	@Override
 	public String toString() {
-		return "ID: " + this.id + "\nNome: " + this.nomeCategoria + "\nFigli:" + this.categorieFiglie.toString();
+		return "\nID: " + this.id + "\nNome: " + this.nomeCategoria + "\nPadre: " + this.padre +"\n";
 	}
 }

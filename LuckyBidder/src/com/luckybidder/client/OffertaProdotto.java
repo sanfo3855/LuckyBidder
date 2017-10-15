@@ -239,15 +239,22 @@ public class OffertaProdotto extends DialogBox {
 									popup.center();
 								}else {
 									double offriPrezzo = prezzoOfferta.getValue();
+									
 									DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
 									Date date = new Date();
-									
+									Date dataGiusta = null;
+									String dataformat = dateFormat.format(date);
 									//String oggi = dateFormat.format(date);
 									
 									Offerta offerta = new Offerta();
-									
-							            offerta.setDataOfferta(date);
-							       
+							            try {
+							                DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
+							                dataGiusta = dateTimeFormat.parse(dataformat);
+							                offerta.setDataOfferta(dataGiusta);
+							            } catch (Exception e)
+							            {
+							            	System.out.println(e);
+							            }
 									
 									offerta.setIdProdotto(id);
 									offerta.setUsername(Session.getInstance().getSession().getUsername());

@@ -252,7 +252,7 @@ public class Profilo extends HorizontalPanel{
 			public String getValue(Offerta object) {
 				String dataString = null;
 				Date datatoConvert = object.getDataOfferta();
-				DateTimeFormat df = DateTimeFormat.getFormat("gg/MM/yyyy");
+				DateTimeFormat df = DateTimeFormat.getFormat("dd/MM/yyyy");
 				try{
 					dataString = df.format(datatoConvert);
 					

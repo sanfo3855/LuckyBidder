@@ -310,7 +310,14 @@ public boolean modificaScadenza(Prodotto prodotto, int id) {
 		return null;
 	}
 	
-	public Categoria getCategorie(){
+	public Categoria getCategoria(int idCategoria) {
+		dbCategorie = getDBCategorie();
+		BTreeMap<Integer, Categoria> mapCategorie = dbCategorie.getTreeMap("MapDBCategorie");
+		Categoria categoria = mapCategorie.getOrDefault(idCategoria, null);
+		return categoria;
+	}
+	
+	public Categoria getTreeCategorie(){
 		dbCategorie = getDBCategorie();
 		BTreeMap<Integer, Categoria> mapCategorie = dbCategorie.getTreeMap("MapDBCategorie");
 		

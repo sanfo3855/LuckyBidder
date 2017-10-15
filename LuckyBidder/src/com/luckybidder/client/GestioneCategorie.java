@@ -128,7 +128,7 @@ public class GestioneCategorie extends VerticalPanel {
 		 * GET CATEGORIE *
 		 *****************/
 		
-		instanceLuckyBidderService.getCategorie( new AsyncCallback<Categoria>() {
+		instanceLuckyBidderService.getTreeCategorie( new AsyncCallback<Categoria>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

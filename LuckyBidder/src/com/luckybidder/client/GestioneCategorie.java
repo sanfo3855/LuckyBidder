@@ -115,6 +115,7 @@ public class GestioneCategorie extends VerticalPanel {
 				Categoria nullCat = new Categoria("null");
 				listaStampati.add(nullCat);
 				processTree(nullCat, result, root);
+				root.setState(true);
 				tt.addItem(root);
 				
 				

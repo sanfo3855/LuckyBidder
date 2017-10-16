@@ -82,7 +82,7 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 			mapProdotti.put(id, prodotto);
 			dbProdotti.commit();
 			dbProdotti.close();
-			System.out.println("Prodotto messo in vednita: " + prodotto.toString());
+			System.out.println("Prodotto messo in vendita: " + prodotto.toString());
 			return true;
 	}
 	

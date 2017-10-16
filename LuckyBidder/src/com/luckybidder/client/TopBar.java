@@ -2,21 +2,14 @@ package com.luckybidder.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.luckybidder.shared.*;
 
 public class TopBar extends VerticalPanel {
-	
-	public String SESSION;
 	
 	public TopBar() {
 		
@@ -30,12 +23,14 @@ public class TopBar extends VerticalPanel {
 		Button profiloButton = new Button("PROFILO");
 		Button vendiProdottoButton = new Button("VENDI PRODOTTO");
 		Button gestioneCategorieButton = new Button("GESTIONE CATEGORIE");
+		Button loginButton = new Button("LOGIN");
 		
 
 		logoutButton.getElement().setAttribute("style", "margin-right: 5px; margin-left: 5px;");
 		homeButton.getElement().setAttribute("style", "margin-left: 5px; margin-right: 5px;");
 		profiloButton.getElement().setAttribute("style", "margin-left: 5px; margin-right: 5px;");
 		vendiProdottoButton.getElement().setAttribute("style", "margin-left: 5px; margin-right: 5px;");
+		loginButton.getElement().setAttribute("style", "margin-left: 5px; margin-right: 5px;");
 		horizontalPanel.add(homeButton);
 		
 		homeButton.addClickHandler( new ClickHandler() {
@@ -50,6 +45,8 @@ public class TopBar extends VerticalPanel {
 			}
 			
 		});
+		
+		
 		
 
 		if(Session.getInstance().getSession()!=null) {
@@ -112,14 +109,25 @@ public class TopBar extends VerticalPanel {
 				}
 				
 			});		
+		} else {
+			horizontalPanel.add(homeButton);
+			loginButton.addClickHandler( new ClickHandler() {
+
+				@Override
+				public void onClick(ClickEvent event) {
+					TopBar topbar = new TopBar();
+					Login login = new Login();
+					RootPanel.get().clear();
+					RootPanel.get().add(topbar);
+					RootPanel.get().add(login);	
+				}
+				
+			});
+			horizontalPanel.add(loginButton);
+			
 		}
 		
-		
-		
 		decoratorTopbar.add(horizontalPanel);
-		
-		
-		
 		this.add(decoratorTopbar);
 	}	
 }

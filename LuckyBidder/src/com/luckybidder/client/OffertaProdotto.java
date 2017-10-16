@@ -26,9 +26,10 @@ import com.luckybidder.shared.Prodotto;
 import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 
 public class OffertaProdotto extends DialogBox {
+	protected String fromPanel;
 	
-	public OffertaProdotto(final int id, final String session) {
-		
+	public OffertaProdotto(final int id, final String session, final String fromPanel) {
+		this.fromPanel = fromPanel;
 		final LuckyBidderServiceAsync instanceLuckyBidderService = LuckyBidderService.Util.getInstance();
 		
 		final DoubleBox prezzoOfferta = new DoubleBox();
@@ -194,7 +195,7 @@ public class OffertaProdotto extends DialogBox {
 				verticalpanel.setCellHorizontalAlignment(btnOffri, HasHorizontalAlignment.ALIGN_CENTER);
 				btnOffri.setWidth("132px");
 				
-				btnProfilo.setText("Torna al Profilo");
+				btnProfilo.setText("Chiudi");
 				verticalpanel.add(btnProfilo);
 				verticalpanel.setCellVerticalAlignment(btnProfilo, HasVerticalAlignment.ALIGN_BOTTOM);
 				verticalpanel.setCellVerticalAlignment(btnProfilo, HasVerticalAlignment.ALIGN_BOTTOM);
@@ -202,11 +203,22 @@ public class OffertaProdotto extends DialogBox {
 				btnProfilo.addClickHandler(new ClickHandler(){
 					@Override
 					public void onClick(ClickEvent event) {
-						TopBar topbar = new TopBar();
-						Profilo profilo = new Profilo();
 						RootPanel.get().clear();
+						TopBar topbar = new TopBar();
 						RootPanel.get().add(topbar);
-						RootPanel.get().add(profilo);
+						if(fromPanel.equals("Home")) {
+							btnProfilo.setText("Torna alla Home");
+							HomeProdotti home = new HomeProdotti();
+							RootPanel.get().add(home);
+						} else if(fromPanel.equals("Profilo")) {
+							btnProfilo.setText("Torna al Profilo");
+							Profilo profilo = new Profilo();
+							RootPanel.get().add(profilo);
+						}
+						
+						
+						
+						
 						
 					}
 				});
@@ -273,7 +285,7 @@ public class OffertaProdotto extends DialogBox {
 										@Override
 										public void onSuccess(Boolean result) {
 										
-												OffertaProdotto offertaProdotto = new OffertaProdotto(id,Session.getInstance().getSession().getUsername());
+												OffertaProdotto offertaProdotto = new OffertaProdotto(id,Session.getInstance().getSession().getUsername(), fromPanel);
 												OffertaProdotto.this.hide();
 												offertaProdotto.center();
 												offertaProdotto.show();

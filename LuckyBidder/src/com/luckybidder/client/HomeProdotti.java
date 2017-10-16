@@ -73,7 +73,7 @@ public class HomeProdotti extends HorizontalPanel{
 					public void onSelectionChange(SelectionChangeEvent event) {
 						Prodotto selected = selectionModel.getSelectedObject();
 						if (selected != null) {
-							OffertaProdotto visualizzaInfo = new OffertaProdotto(selected.getIdProdotto(),Session.getInstance().getSession().getUsername());
+							OffertaProdotto visualizzaInfo = new OffertaProdotto(selected.getIdProdotto(),Session.getInstance().getSession().getUsername(), "Home");
 							visualizzaInfo.center();
 							visualizzaInfo.show();
 						}
@@ -89,6 +89,7 @@ public class HomeProdotti extends HorizontalPanel{
 		});
 		
 		decoratorPanel.add(verticalPanel);
+		decoratorPanel.getElement().setAttribute("style", "margin-left: 14px; margin-top: 6px");
 		this.add(decoratorPanel);
 		
 	}

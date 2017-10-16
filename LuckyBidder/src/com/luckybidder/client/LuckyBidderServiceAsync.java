@@ -25,6 +25,7 @@ public interface LuckyBidderServiceAsync {
 	void getCategoria(int id, AsyncCallback<Categoria> callback);
 
 	void getAllCategorie(AsyncCallback<ArrayList<Categoria>> callback);
-	
+
+	void modificaCategoria(String nomeCategoria, String nomeNuovo, AsyncCallback<Boolean> callback);
 
 }

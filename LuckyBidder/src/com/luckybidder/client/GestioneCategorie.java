@@ -9,7 +9,6 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -29,7 +28,6 @@ public class GestioneCategorie extends VerticalPanel {
 
 	private Button bAggiungiSottoCategoria;
 	private TextBox tAggiungiSottoCategoria;
-	private Button bEliminaCategoria;
 	private Button bModificaCategoria;
 	private TextBox tModificaCategoria;
 	private Label labelSelectedCategoria;
@@ -137,12 +135,16 @@ public class GestioneCategorie extends VerticalPanel {
 					tAggiungiSottoCategoria = new TextBox();
 					labelSelectedCategoria = new Label("Selezionato: " + event.getSelectedItem().getText());
 					labelSelectedCategoria.getElement().setAttribute("style", "font-size: 20px; font-weight: bold; padding-top: 25px; padding-bottom: 5px");
+					bModificaCategoria = new Button("Modifica Categoria");
+					tModificaCategoria = new TextBox();
+					tModificaCategoria.setText(event.getSelectedItem().getText());
 					
 					HorizontalPanel hpAggiungiSottoCategoria = new HorizontalPanel();
 					hpAggiungiSottoCategoria.add(tAggiungiSottoCategoria);
 					hpAggiungiSottoCategoria.add(bAggiungiSottoCategoria);
 					bAggiungiSottoCategoria.addClickHandler( new ClickHandler() {
-
+					
+					
 						@Override
 						public void onClick(ClickEvent eventClick) {
 							Categoria addCategoria = new Categoria(tAggiungiSottoCategoria.getValue());
@@ -181,10 +183,51 @@ public class GestioneCategorie extends VerticalPanel {
 						
 					});
 					
+					HorizontalPanel hpModificaCategoria = new HorizontalPanel();
+					hpModificaCategoria.add(tModificaCategoria);
+					hpModificaCategoria.add(bModificaCategoria);
+					bModificaCategoria.addClickHandler( new ClickHandler() {
+
+						@Override
+						public void onClick(ClickEvent eventClick) {
+							instanceLuckyBidderService.modificaCategoria(event.getSelectedItem().getText(), tModificaCategoria.getValue(), new AsyncCallback<Boolean>() {
+
+								@Override
+								public void onFailure(Throwable caught) {
+									PopupPanel popup = new PopupPanel(true);
+									popup.setWidget( new HTML("<font color='red'>Impossibile eliminare categoria: Errore nella connessione con il server.<br>"+caught+"</font>"));
+									popup.center();
+									
+								}
+
+								@Override
+								public void onSuccess(Boolean result) {
+									if(result) {
+										PopupPanel popup = new PopupPanel(true);
+										popup.setWidget( new HTML("<font color='black'>Modificato "+ event.getSelectedItem().getText() +" in " + tModificaCategoria.getValue() +"</font>"));
+										popup.center();
+										TopBar topbar = new TopBar();
+										GestioneCategorie gestionecategorie = new GestioneCategorie();
+										RootPanel.get().clear();
+										RootPanel.get().add(topbar);
+										RootPanel.get().add(gestionecategorie);
+										
+									}
+									
+								}
+								
+							});
+							
+						}
+						
+					});
+					
 					vpGeneral.clear();
 					vpGeneral.add(hpAggiungiCategoria);
 					vpGeneral.add(labelSelectedCategoria);	
 					vpGeneral.add(hpAggiungiSottoCategoria);
+					vpGeneral.add(hpModificaCategoria);
+
 				}
 				
 				

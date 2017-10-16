@@ -40,6 +40,7 @@ public interface LuckyBidderService extends RemoteService{
 	Categoria getCategoria(int idCategoria);
 	
 	ArrayList<Categoria> getAllCategorie();
-
+	
+	boolean modificaCategoria(String nomeCategoria, String nomeNuovo);
 	
 }

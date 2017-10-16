@@ -282,6 +282,7 @@ public boolean modificaScadenza(Prodotto prodotto, int id) {
 					}
 				}
 			} else {
+				dbCategorie.commit();
 				System.out.println("Check padre esistente false");
 				return false;
 			}
@@ -317,5 +318,25 @@ public boolean modificaScadenza(Prodotto prodotto, int id) {
 		}
 		//System.out.println(root.toString());
 		return listCategorie;		
+	}
+	
+	public boolean modificaCategoria(String nomeCategoria, String nomeNuovo) {
+		dbCategorie = getDBCategorie();
+		BTreeMap<Integer, Categoria> mapCategorie = dbCategorie.getTreeMap("MapDBCategorie");
+		boolean result = false;
+		if(!mapCategorie.isEmpty()) {
+			for(Map.Entry<Integer, Categoria> categoria : mapCategorie.entrySet()) {
+				if(categoria.getValue().getNomeCategoria().contentEquals(nomeCategoria)) {
+					Categoria temp = categoria.getValue();
+					temp.setNomeCategoria(nomeNuovo);;
+					mapCategorie.remove(temp.getId());
+					mapCategorie.put(temp.getId(), temp);
+					result = true;
+					
+				}
+			}
+		}
+		dbCategorie.commit();
+		return result;		
 	}
 }

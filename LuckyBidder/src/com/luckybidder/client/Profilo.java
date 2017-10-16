@@ -1,5 +1,7 @@
 package com.luckybidder.client;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -16,6 +18,8 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
 import com.luckybidder.shared.Prodotto;
 import com.luckybidder.shared.Offerta;
 
@@ -246,7 +250,16 @@ public class Profilo extends HorizontalPanel{
 		TextColumn<Offerta> txtColData = new TextColumn<Offerta>() {
 			@Override
 			public String getValue(Offerta object) {
-				return object.getData();
+				String dataString = null;
+				Date datatoConvert = object.getDataOfferta();
+				DateTimeFormat df = DateTimeFormat.getFormat("dd/MM/yyyy");
+				try{
+					dataString = df.format(datatoConvert);
+					
+				   }catch (Exception ex ){
+					System.out.println(ex);
+				   }
+				return dataString;
 			}
 		};
 		tableOfferte.addColumn(txtColData, "Data");
@@ -265,7 +278,7 @@ public class Profilo extends HorizontalPanel{
 				ArrayList<Offerta> offerte = new ArrayList<Offerta>(result);
 				tableOfferte.setRowCount(offerte.size(), true);
 				
-			/*	final SingleSelectionModel<Offerta> selectionModel = new SingleSelectionModel<Offerta>();
+				final SingleSelectionModel<Offerta> selectionModel = new SingleSelectionModel<Offerta>();
 				tableOfferte.setSelectionModel(selectionModel);
 				//Alla selezione di un oggetto diverso
 				selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -275,12 +288,12 @@ public class Profilo extends HorizontalPanel{
 						//Se abbiamo selezionato una riga
 						if (selected != null) {
 							//visualizzeremo un popup contenente i dettagli dell'oggetto su cui � stata effettuata l'offerta
-							GestioneOfferta visualizzaInfo = new GestioneOfferta(selected.getIdProdotto(),Session.getInstance().getSession().getUsername());
+							OffertaProdotto visualizzaInfo = new OffertaProdotto(selected.getIdProdotto(),Session.getInstance().getSession().getUsername());
 							visualizzaInfo.center();
 							visualizzaInfo.show();
 						}
 					}
-				});*/
+				});
 				
 				tableOfferte.setRowData(0, offerte);
 				

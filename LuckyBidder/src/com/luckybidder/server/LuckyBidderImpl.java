@@ -1,7 +1,6 @@
 package com.luckybidder.server;
 
 import com.luckybidder.client.LuckyBidderService;
-import com.luckybidder.shared.FieldVerifier;
 
 import java.io.File;
 
@@ -22,7 +21,6 @@ import org.mapdb.DB;
 import org.mapdb.DBMaker;
 
 import com.luckybidder.server.*;
-
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.luckybidder.shared.*;
 /**
@@ -87,65 +85,134 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 			System.out.println("Prodotto messo in vednita: " + prodotto.toString());
 			return true;
 	}
-
-@Override
-public ArrayList<Prodotto> getProdotti() {
-
-	dbProdotti = getDBProdotti();
-
-	BTreeMap<Integer, Prodotto> mapProdotti = dbProdotti.getTreeMap("MapProdotti");
-	ArrayList<Prodotto> listaProdotti = new ArrayList<Prodotto>();
-	Prodotto prodottoSelezionato = new Prodotto();
 	
-	if(!mapProdotti.isEmpty()){
-		for(Map.Entry<Integer, Prodotto> prodotto : mapProdotti.entrySet()){
-			
-			prodottoSelezionato = prodotto.getValue(); 
-			listaProdotti.add(prodottoSelezionato);
-			
-			
-			//Date oggi = Calendar.getInstance().getTime();
-			//DATA SCADENZA > DATA ODIERNA
-			/*
-			if ((prodottoSelezionato.getDataScadenza().after(oggi)) && (prodottoSelezionato.getStato().equals("Asta in corso"))){
-				modificaScadenza(prodottoSelezionato, prodottoSelezionato.getIdProdotto());
-			} */
-			//if (!prodottoSelezionato.getStato().equals("Asta chiusa") && !(prodotto.getValue().getIdProdotto()==-1)) {
+	@Override
+	public Prodotto getProdottoSingolo(int id) {
+		dbProdotti = getDBProdotti();
+		BTreeMap<Integer, Prodotto> mapProdotti = dbProdotti.getTreeMap("MapProdotti");
+		Prodotto prodottoEstratto = new Prodotto();
+		if(!mapProdotti.isEmpty()) {
+			prodottoEstratto = mapProdotti.get(id);
+		}
+		return prodottoEstratto;
+	}
+	
+	@Override
+	public ArrayList<Prodotto> getProdotti() {
+	
+		dbProdotti = getDBProdotti();
+	
+		BTreeMap<Integer, Prodotto> mapProdotti = dbProdotti.getTreeMap("MapProdotti");
+		ArrayList<Prodotto> listaProdotti = new ArrayList<Prodotto>();
+		if(!mapProdotti.isEmpty()){
+			for(Map.Entry<Integer, Prodotto> prodotto : mapProdotti.entrySet()){
 				
-			//}
+				Prodotto prodottoEstratto = new Prodotto();
+				
+				Date controllaData = null;
+				prodottoEstratto = prodotto.getValue();
+				controllaData = prodottoEstratto.getDataScadenza();
+				
+				Date dataOggi = Calendar.getInstance().getTime();
+				if((controllaData.compareTo(dataOggi)<0)&& (prodottoEstratto.getStato().contentEquals("APERTA"))) {
+					modificaScadenza(prodottoEstratto, prodottoEstratto.getIdProdotto());
+				}
+				if(!prodottoEstratto.getStato().equals("CHIUSA")) {
+					listaProdotti.add(prodottoEstratto);
+				}
+			}
+		}
+		//La lista viene ordinata in ordine di scadenza
+		Collections.sort(listaProdotti);
+		return listaProdotti;
+	}
+	
+	@Override
+	public boolean modificaScadenza(Prodotto prodotto, int id) {
+	
+		dbProdotti = getDBProdotti();
+		BTreeMap<Integer, Prodotto> mapProdotti = dbProdotti.getTreeMap("MapProdotti");
+	
+		dbOfferte = getDBOfferte(); 
+		BTreeMap<Integer, Offerta> mapOfferte = dbOfferte.getTreeMap("MapOfferte");
+	
+		Prodotto prodottoModificato = new Prodotto();
+		if(!mapProdotti.isEmpty()){
+			prodottoModificato = prodotto;
+			Offerta offertaMax = getMaxOfferta(prodottoModificato.getIdProdotto());	//Si cerca l'offerta massima per l'oggetto
+			if (offertaMax.getPrezzo()>0) {
+				//Se � presente un offerta, si setta come vincitore l'username
+				//dell'utente che ha presentato l'offerta pi� alta
+				prodottoModificato.setVincitore(offertaMax.getUsername()); 
+			}
+			//L'asta viene chiusa
+			prodottoModificato.setStato("CHIUSA");	
+			//Si aggiorna il valore dell'oggetto
+			mapProdotti.replace(id, prodottoModificato);	
+			dbProdotti.commit();
+			return true;
+		}
+		else{
+			return false;
 		}
 	}
-	//La lista viene ordinata in ordine di scadenza
-	//Collections.sort(listaProdotti);
-	return listaProdotti;
-}
-/*
-@Override
-public boolean modificaScadenza(Prodotto prodotto, int id) {
-
-	DB dbProd = getDBProdotti();
-	BTreeMap<Integer, Prodotto> mapProdotti = dbProd.getTreeMap("MapProdotti");
-
-	DB dbOff = getDBOfferte(); 
-	BTreeMap<Integer, Offerta> mapOfferte = dbOff.getTreeMap("MapOfferte");
-
-	Prodotto prodottoModificato = new Prodotto();
-	if(!mapProdotti.isEmpty()){
-		prodottoModificato = prodotto;
-		Offerta offertaMax = getMaxOfferta(prodottoModificato.getIdProdotto());	//Si cerca l'offerta massima per l'oggetto
-		if (offertaMax.getPrezzo()>0) {
-			oggettoModificato.setVincitore(offertaMax.getUsername());	//Se � presente un offerta, si setta come vincitore l'username 
-		}																//dell'utente che ha presentato l'offerta pi� alta
-		oggettoModificato.setStato("Asta chiusa");	//L'asta viene chiusa
-		mapOggetti.replace(id, oggettoModificato);	//Si aggiorna il valore dell'oggetto
-		dbOg.commit();
-		return true;
+	
+	@Override
+	public Offerta getMaxOfferta(int idProdotto) {
+		dbOfferte = getDBOfferte();
+		BTreeMap<Integer, Offerta> mapOfferte = dbOfferte.getTreeMap("MapOfferte");
+		Offerta offertaMax = new Offerta();
+		double prezzoMax = 0;
+		if(!mapOfferte.isEmpty()) {
+			for(Map.Entry<Integer, Offerta> offerta : mapOfferte.entrySet()){
+				//Se l'offerta � riferita all'oggetto, non � stata eliminata ed � maggiore dell' ultimo prezzo massimo
+				if (offerta.getValue().getIdProdotto() == idProdotto && offerta.getValue().getPrezzo()>prezzoMax && !(offerta.getValue().getIdProdotto()==-1)){
+					offertaMax = offerta.getValue();
+					//Si prende come offerta massima
+					prezzoMax=offertaMax.getPrezzo();
+				}
+			}	
+		}
+		return offertaMax;
 	}
-	else{
-		return false;
+	
+	@Override
+	public boolean offri(Offerta offerta) {
+		/*int id;
+		int idOggetto = offerta.getIdProdotto();
+		String username = offerta.getUsername();
+		double prezzo = offerta.getPrezzo();	
+		Date date = offerta.getDataOfferta();*/
+		dbOfferte = getDBOfferte();
+		BTreeMap<Integer, Offerta> mapOfferte = dbOfferte.getTreeMap("MapOfferte");
+			int id=(mapOfferte.size()+1);
+			offerta.setIdOfferta(id);
+			//Offerta nuovaOfferta = new Offerta(id,idOggetto,username,prezzo,date);
+			mapOfferte.put(id, offerta);
+			dbOfferte.commit();
+			System.out.println("Inserimento offerta: "+ offerta.toString());
+			return true;
 	}
-}
-*/
+	
+	@Override
+	public ArrayList<Offerta> getOfferte(int idProdotto){
+		
+		dbOfferte=getDBOfferte();
+		BTreeMap<Integer,Offerta> mapOfferte = dbOfferte.getTreeMap("MapOfferte");
+		ArrayList<Offerta> listaOfferte = new ArrayList<Offerta>();
+		if(!mapOfferte.isEmpty()) {
+			for(Map.Entry<Integer, Offerta> offerta : mapOfferte.entrySet()) {
+				if(offerta.getValue().getIdProdotto() == idProdotto && !(offerta.getValue().getIdProdotto()==-1)) {
+					Offerta offertaEstratta = new Offerta();
+					offertaEstratta = offerta.getValue();
+					listaOfferte.add(offertaEstratta);
+				}
+			}
+		}
+		return listaOfferte;
+	}
+
+
 	private DB getDBUtenti() {
 
 		dbUtenti = DBMaker.newFileDB(new File("MapDBUtenti")).closeOnJvmShutdown().make();		

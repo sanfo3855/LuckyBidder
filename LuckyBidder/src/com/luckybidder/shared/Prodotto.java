@@ -3,7 +3,7 @@ package com.luckybidder.shared;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Prodotto implements Serializable {
+public class Prodotto implements Serializable,Comparable<Prodotto> {
 	
 	private int idProdotto;
 	private String username;
@@ -111,5 +111,11 @@ public class Prodotto implements Serializable {
 				"Categoria: " + this.categoria +"\n";
 							  
 		return stringProdotto;
+	}
+	
+	@Override
+	public int compareTo(Prodotto prodotto) {
+		return this.getDataScadenza().compareTo(prodotto.getDataScadenza());
+
 	}
 }

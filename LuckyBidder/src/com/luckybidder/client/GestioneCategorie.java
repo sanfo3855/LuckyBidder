@@ -221,7 +221,6 @@ public class GestioneCategorie extends VerticalPanel {
 						GWT.log("trovato figlio" + cat1.toString());
 						processTree(cat, listaCategorie, ti);
 					}
-					
 				}
 				itemPadre.addItem(ti);
 			}

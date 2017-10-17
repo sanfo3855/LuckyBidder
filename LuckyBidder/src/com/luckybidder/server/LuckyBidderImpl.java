@@ -20,7 +20,6 @@ import org.mapdb.BTreeMap;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 
-import com.luckybidder.server.*;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.luckybidder.shared.*;
 /**
@@ -405,5 +404,93 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 		}
 		dbCategorie.commit();
 		return result;		
+	}
+
+	private DB getDBDomande() {
+		dbDomande = DBMaker.newFileDB(new File("MapDBDomande")).closeOnJvmShutdown().make();		
+		return dbDomande;
+	}
+	
+	@Override
+	public Domanda getDomanda(String username, int id) {
+		dbDomande = getDBDomande();
+		BTreeMap<Integer,Domanda> mapDomande = dbDomande.getTreeMap("MapDBDomande");
+		Domanda domandaReturn = null;
+		if(!mapDomande.isEmpty()) {
+			for(Map.Entry<Integer, Domanda> domanda : mapDomande.entrySet()) {
+				if(domanda.getValue().getIdProdotto()==id && domanda.getValue().getDaCheutente().equals(username)) {
+					domandaReturn = domanda.getValue();
+				}
+			}
+		}
+		dbDomande.commit();
+		return domandaReturn;
+	}
+
+	@Override
+	public boolean mandaDomanda(String nomeProdotto, String testoDomanda, String username, int id, String usernameVenditore) {
+		dbDomande = getDBDomande();
+		BTreeMap<Integer,Domanda> mapDomande = dbDomande.getTreeMap("MapDBDomande");
+		Domanda domanda = new Domanda();
+		domanda.setDaCheutente(username);
+		domanda.setIdProdotto(id);
+		domanda.setTestoDomanda(testoDomanda);
+		domanda.setNomeUtenteVenditore(usernameVenditore);
+		domanda.setNomeProdotto(nomeProdotto);
+		domanda.setIdDomanda(mapDomande.size()+1);
+		mapDomande.put(mapDomande.size()+1, domanda);
+		dbDomande.commit();
+		return true;
+	}
+
+	@Override
+	public Risposta getRisposta(int idDomanda) {
+		dbRisposte = getDBRisposte();
+		Risposta returnRisposta = null;
+		BTreeMap<Integer,Risposta> mapRisposte = dbRisposte.getTreeMap("MapDBRisposte");
+		for(Map.Entry<Integer, Risposta> risposta : mapRisposte.entrySet()) {
+			if(risposta.getValue().getIdDomandaRelativa() == idDomanda) {
+				returnRisposta = risposta.getValue();
+			}
+		}
+		return returnRisposta;
+	}
+
+	@Override
+	public ArrayList<Domanda> getDomandeToUsername(String usernameVendProdotto) {
+		dbDomande = getDBDomande();
+		BTreeMap<Integer,Domanda> mapDomande = dbDomande.getTreeMap("MapDBDomande");
+		
+		ArrayList<Domanda> listResult = new ArrayList<Domanda>();
+		if(!mapDomande.isEmpty()) {
+			for(Map.Entry<Integer, Domanda> domanda : mapDomande.entrySet()) {
+				if(domanda.getValue().getNomeUtenteVenditore().equals(usernameVendProdotto)) {
+					System.out.println("Trovata domanda per " + usernameVendProdotto);
+					listResult.add(domanda.getValue());
+				}
+				
+			}
+		}
+		dbDomande.commit();
+		return listResult;
+	}
+
+	
+	private DB getDBRisposte() {
+		dbDomande = DBMaker.newFileDB(new File("MapDBRisposte")).closeOnJvmShutdown().make();		
+		return dbDomande;
+	}
+	
+	@Override
+	public boolean inviaRisposta(int idDomanda, String testoRisposta) {
+		dbRisposte = getDBRisposte();
+		BTreeMap<Integer,Risposta> mapRisposte = dbRisposte.getTreeMap("MapDBRisposte");
+		Risposta risposta = new Risposta();
+		risposta.setIdDomandaRelativa(idDomanda);
+		risposta.setRisposta(testoRisposta);
+		risposta.setIdRisposta(mapRisposte.size()+1);
+		mapRisposte.put(mapRisposte.size()+1, risposta);
+		dbRisposte.commit();
+		return false;
 	}
 }

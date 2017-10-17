@@ -52,5 +52,15 @@ public interface LuckyBidderService extends RemoteService{
 	boolean offri(Offerta offerta);
 	
 	ArrayList <Offerta> getOfferte(int idProdotto);
+
+	Domanda getDomanda(String username, int id);
+
+	boolean mandaDomanda(String nomeProdotto, String testoDomanda, String username, int id, String usernameVenditore);
+
+	Risposta getRisposta(int idDomanda);
+
+	ArrayList<Domanda> getDomandeToUsername(String usernameVendProdotto);
+
+	boolean inviaRisposta(int idDomanda, String text);
 	
 }

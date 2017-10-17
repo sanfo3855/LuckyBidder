@@ -150,10 +150,7 @@ public class Profilo extends HorizontalPanel{
 		
 		final CellTable<Prodotto> table = new CellTable<Prodotto>();
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
-		table.setWidth("710px");
-		table.setColumnWidth(1, "270px");
-		table.setColumnWidth(1, "270px");
-		table.setColumnWidth(2, "270px");
+		table.setWidth("450px");
 		
 		//COLONNA PRODOTTO
 		TextColumn<Prodotto> txtColName = new TextColumn<Prodotto>(){
@@ -221,10 +218,7 @@ public class Profilo extends HorizontalPanel{
 		//TABELLA OFFERTA
 		final CellTable<Offerta> tableOfferte = new CellTable<Offerta>();
 		tableOfferte.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
-		tableOfferte.setWidth("710px");
-		tableOfferte.setColumnWidth(0, "270px");
-		tableOfferte.setColumnWidth(1, "270px");
-		tableOfferte.setColumnWidth(2, "270px");
+		tableOfferte.setWidth("450px");
 
 		//COLONNA ID PRODOTTO
 		TextColumn<Offerta> txtColId = new TextColumn<Offerta>() {
@@ -305,8 +299,9 @@ public class Profilo extends HorizontalPanel{
 			}
 		
 		});
-		//this.add(decoratorpanel3);
+		
 		this.add(verticalPanelGeneral);
+		this.add(new DomandaRisposta(Session.getInstance().getSession().getUsername()));
 	
 	}
 }

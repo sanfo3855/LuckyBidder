@@ -20,9 +20,13 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.luckybidder.shared.Domanda;
 import com.luckybidder.shared.Offerta;
 import com.luckybidder.shared.Prodotto;
+import com.luckybidder.shared.Risposta;
 import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 
 public class OffertaProdotto extends DialogBox {
@@ -33,6 +37,13 @@ public class OffertaProdotto extends DialogBox {
 		this.fromPanel = fromPanel;
 		this.filtro = filtro;
 		final LuckyBidderServiceAsync instanceLuckyBidderService = LuckyBidderService.Util.getInstance();
+		//HorizontalPanel generale
+		final HorizontalPanel hpGeneral = new HorizontalPanel();
+		//VerticalPanel relativo all'offerta
+		final VerticalPanel vpOfferta = new VerticalPanel();
+		//VerticalPanel relativo a domanda e risposta
+		final VerticalPanel vpDomandaRisposta = new VerticalPanel();
+		
 		
 		final DoubleBox prezzoOfferta = new DoubleBox();
 		final Button btnOffri = new Button("");
@@ -40,7 +51,10 @@ public class OffertaProdotto extends DialogBox {
 
 
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
-		this.add(horizontalPanel);
+		vpOfferta.add(horizontalPanel);
+		hpGeneral.add(vpOfferta);
+		this.add(hpGeneral);
+		//hpGeneral.add(vpDomandaRisposta);
 		horizontalPanel.setSize("100%", "550px");
 
 		final VerticalPanel verticalpanel = new VerticalPanel();
@@ -69,7 +83,8 @@ public class OffertaProdotto extends DialogBox {
 				final String username = result.getUsername();
 				final String stato = result.getStato();
 				final String vincitore = result.getVincitore();
-				
+				final String usernameVenditore = result.getUsername();
+				final String nomeProdotto = result.getNomeProdotto();
 
 				HTMLPanel panel = new HTMLPanel("<center>" + stato + "</center>");
 				verticalpanel.add(panel);
@@ -317,14 +332,128 @@ public class OffertaProdotto extends DialogBox {
 					btnOffri.setEnabled(false);
 				}
 				
+				//Domanda e Risposta
+				if(Session.getInstance().getSession() != null) {
+					if(!Session.getInstance().getSession().getUsername().equals("admin")) {
+						hpGeneral.add(vpDomandaRisposta);
+						final Label labelDomanda = new Label("DOMANDA");
+						instanceLuckyBidderService.getDomanda(Session.getInstance().getSession().getUsername(),id, new AsyncCallback<Domanda>() {
+						
+							@Override
+							public void onFailure(Throwable caught) {
+								PopupPanel popup = new PopupPanel(true);
+								popup.setWidget(new HTML("<font color='red'>Impossibile ottenere le domanda: Errore nella connessione con il server</font>"));
+								popup.center();	
+							}
+
+							@Override
+							public void onSuccess(Domanda result) {
+								if(result==null) {
+									labelDomanda.getElement().setAttribute("style", "margin:5px; font-size:20px");
+									final Label faiLaDomanda = new Label("Scrivi qua sotto la tua domanda:");
+									faiLaDomanda.getElement().setAttribute("style", "margin:5px");
+									final TextArea taDomanda = new TextArea();
+									taDomanda.getElement().setAttribute("style", "margin:5px");
+									final Button faiDomandaButton = new Button("Manda Domanda");
+									faiDomandaButton.getElement().setAttribute("style", "margin:5px");
+									taDomanda.setCharacterWidth(30);
+									taDomanda.setVisibleLines(6);
+								    vpDomandaRisposta.add(labelDomanda);
+								    vpDomandaRisposta.add(faiLaDomanda);
+									vpDomandaRisposta.add(taDomanda);
+									vpDomandaRisposta.add(faiDomandaButton);
+									
+									faiDomandaButton.addClickHandler( new ClickHandler() {
+
+										@Override
+										public void onClick(ClickEvent event) {
+											instanceLuckyBidderService.mandaDomanda(nomeProdotto, taDomanda.getValue(), Session.getInstance().getSession().getUsername(),id, usernameVenditore, new AsyncCallback<Boolean>() {
+
+												@Override
+												public void onFailure(Throwable caught) {
+													
+													
+												}
+
+												@Override
+												public void onSuccess(Boolean result) {
+													vpDomandaRisposta.remove(faiLaDomanda);
+													vpDomandaRisposta.remove(taDomanda);
+													vpDomandaRisposta.remove(faiDomandaButton);
+													Label haiChiesto = new Label("Hai chiesto:");
+													haiChiesto.getElement().setAttribute("style", "margin:5px");
+													vpDomandaRisposta.add( haiChiesto);
+													taDomanda.setText( taDomanda.getValue());
+													taDomanda.setReadOnly(true);
+													vpDomandaRisposta.add( taDomanda );
+													
+													
+													
+												}
+												
+											});
+											
+										}
+										
+									});
+								} else {
+									labelDomanda.	getElement().setAttribute("style", "margin:5px; font-size:20px");
+									vpDomandaRisposta.add(labelDomanda);
+									Domanda domandaReturn = result;
+									Label haiChiesto = new Label("Hai chiesto:");
+									haiChiesto.getElement().setAttribute("style", "margin:5px");
+									vpDomandaRisposta.add( haiChiesto);
+									TextArea taDomanda = new TextArea();
+									taDomanda.setText( result.getTestoDomanda() );
+									taDomanda.setCharacterWidth(30);
+									taDomanda.setVisibleLines(6);
+									taDomanda.setReadOnly(true);
+									vpDomandaRisposta.add( taDomanda );
+									
+									instanceLuckyBidderService.getRisposta(result.getIdDomanda(), new AsyncCallback<Risposta>() {
+
+										@Override
+										public void onFailure(Throwable caught) {
+											// TODO Auto-generated method stub
+											
+										}
+
+										@Override
+										public void onSuccess(Risposta result) {
+											
+											if(result != null) {
+												Label risposta = new Label("RISPOSTA");
+												risposta.getElement().setAttribute("style", "margin:5px; font-size:20px; margin-left:15px");
+												vpDomandaRisposta.add(risposta);
+												Label labelRispondi = new Label("Rispondi:");
+												labelRispondi.getElement().setAttribute("style", "margin:5px; margin-left:15px");
+												vpDomandaRisposta.add(labelRispondi);
+												
+												final TextArea taRisposta = new TextArea();
+												taRisposta.setCharacterWidth(30);
+												taRisposta.setVisibleLines(6);
+												taRisposta.setText( result.getRisposta() );
+												taRisposta.setReadOnly(true);
+												vpDomandaRisposta.add(taRisposta);
+												Button rispondiButton = new Button("Rispondi");
+												vpDomandaRisposta.add(rispondiButton);
+											}
+											
+										}
+										
+									});
+										
+								}
+							}
+							
+						});
+					}
+				}
 				
 			}
 			
 			
 		});
-		
-		
-		
 
 	}
 }

@@ -288,7 +288,7 @@ public class Profilo extends HorizontalPanel{
 						//Se abbiamo selezionato una riga
 						if (selected != null) {
 							//visualizzeremo un popup contenente i dettagli dell'oggetto su cui � stata effettuata l'offerta
-							OffertaProdotto visualizzaInfo = new OffertaProdotto(selected.getIdProdotto(),Session.getInstance().getSession().getUsername(),"Profilo");
+							OffertaProdotto visualizzaInfo = new OffertaProdotto(selected.getIdProdotto(),Session.getInstance().getSession().getUsername(),"Profilo", null);
 							visualizzaInfo.center();
 							visualizzaInfo.show();
 						}

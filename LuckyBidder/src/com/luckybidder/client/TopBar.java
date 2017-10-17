@@ -38,7 +38,7 @@ public class TopBar extends VerticalPanel {
 			@Override
 			public void onClick(ClickEvent event) {
 				TopBar topbar = new TopBar();
-				HomeProdotti homeprodotti = new HomeProdotti();
+				HomeProdotti homeprodotti = new HomeProdotti(null);
 				RootPanel.get().clear();
 				RootPanel.get().add(topbar);
 				RootPanel.get().add(homeprodotti);	
@@ -123,8 +123,7 @@ public class TopBar extends VerticalPanel {
 				}
 				
 			});
-			horizontalPanel.add(loginButton);
-			
+			horizontalPanel.add(loginButton);	
 		}
 		
 		decoratorTopbar.add(horizontalPanel);

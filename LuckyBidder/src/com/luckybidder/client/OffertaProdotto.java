@@ -27,9 +27,11 @@ import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 
 public class OffertaProdotto extends DialogBox {
 	protected String fromPanel;
+	private String filtro;
 	
-	public OffertaProdotto(final int id, final String session, final String fromPanel) {
+	public OffertaProdotto(final int id, final String session, final String fromPanel, final String filtro) {
 		this.fromPanel = fromPanel;
+		this.filtro = filtro;
 		final LuckyBidderServiceAsync instanceLuckyBidderService = LuckyBidderService.Util.getInstance();
 		
 		final DoubleBox prezzoOfferta = new DoubleBox();
@@ -208,7 +210,7 @@ public class OffertaProdotto extends DialogBox {
 						RootPanel.get().add(topbar);
 						if(fromPanel.equals("Home")) {
 							btnProfilo.setText("Torna alla Home");
-							HomeProdotti home = new HomeProdotti();
+							HomeProdotti home = new HomeProdotti(filtro);
 							RootPanel.get().add(home);
 						} else if(fromPanel.equals("Profilo")) {
 							btnProfilo.setText("Torna al Profilo");
@@ -223,93 +225,98 @@ public class OffertaProdotto extends DialogBox {
 					}
 				});
 				
-				
-				btnOffri.addClickHandler(new ClickHandler(){
-					public void onClick(ClickEvent event) {
-						instanceLuckyBidderService.getMaxOfferta(id, new AsyncCallback<Offerta>(){
-								
-							@Override
-							public void onFailure(Throwable caught) {
-								PopupPanel popup = new PopupPanel(true);
-								popup.setWidget(new HTML("<font color='red'>Impossibile estrarre le informazioni: Errore nella connessione con il server</font>"));
-								popup.center();	
-								
-							}
+				if(Session.getInstance().getSession() != null) {
+					btnOffri.addClickHandler(new ClickHandler(){
+						public void onClick(ClickEvent event) {
+							instanceLuckyBidderService.getMaxOfferta(id, new AsyncCallback<Offerta>(){
+									
+								@Override
+								public void onFailure(Throwable caught) {
+									PopupPanel popup = new PopupPanel(true);
+									popup.setWidget(new HTML("<font color='red'>Impossibile estrarre le informazioni: Errore nella connessione con il server</font>"));
+									popup.center();	
+									
+								}
 
-							@Override
-							public void onSuccess(Offerta resultOff) {
-								boolean controllaP = true;
-								if(resultOff.getPrezzo() != 0) {
-									double prezzoMax = resultOff.getPrezzo();
-									if(prezzoOfferta.getValue() == null || prezzoOfferta.getValue() < prezzo || prezzoOfferta.getValue() <= prezzoMax ) {
-										controllaP = false;
+								@Override
+								public void onSuccess(Offerta resultOff) {
+									boolean controllaP = true;
+									if(resultOff.getPrezzo() != 0) {
+										double prezzoMax = resultOff.getPrezzo();
+										if(prezzoOfferta.getValue() == null || prezzoOfferta.getValue() < prezzo || prezzoOfferta.getValue() <= prezzoMax ) {
+											controllaP = false;
+										}
+									}
+									if(prezzoOfferta.getValue() == null || prezzoOfferta.getValue() < prezzo || !controllaP) {
+										PopupPanel popup = new PopupPanel(true);
+										popup.setWidget(new HTML("<font color='red'>Offerta non valida!</font>"));
+										popup.center();
+									}else {
+										double offriPrezzo = prezzoOfferta.getValue();
+										
+										DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
+										Date date = new Date();
+										Date dataGiusta = null;
+										String dataformat = dateFormat.format(date);
+										//String oggi = dateFormat.format(date);
+										
+										Offerta offerta = new Offerta();
+								            try {
+								                DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
+								                dataGiusta = dateTimeFormat.parse(dataformat);
+								                offerta.setDataOfferta(dataGiusta);
+								            } catch (Exception e)
+								            {
+								            	System.out.println(e);
+								            }
+										
+										offerta.setIdProdotto(id);
+										offerta.setUsername(Session.getInstance().getSession().getUsername());
+										offerta.setPrezzo(offriPrezzo);
+										
+										instanceLuckyBidderService.offri(offerta, new AsyncCallback<Boolean>(){
+											
+											@Override
+											public void onFailure(Throwable caught) {
+												PopupPanel popup = new PopupPanel(true);
+												popup.setWidget(new HTML("<font color='red'>Impossibile estrarre le informazioni: Errore nella connessione con il server</font>"));
+												popup.center();	
+												
+											}
+
+											@Override
+											public void onSuccess(Boolean result) {
+											
+													OffertaProdotto offertaProdotto = new OffertaProdotto(id,Session.getInstance().getSession().getUsername(), fromPanel, filtro);
+													OffertaProdotto.this.hide();
+													offertaProdotto.center();
+													offertaProdotto.show();
+													PopupPanel popup = new PopupPanel(true);
+													popup.setWidget(new HTML("<font color='green'size='5'>Offerta inserita correttamente!</font>"));
+													popup.center();
+													
+													TopBar topbar = new TopBar();
+													HomeProdotti homeProdotti = new HomeProdotti(filtro);
+													RootPanel.get().clear();
+													RootPanel.get().add(topbar);
+													RootPanel.get().add(homeProdotti);
+												
+												
+											}
+											
+										});
+							
 									}
 								}
-								if(prezzoOfferta.getValue() == null || prezzoOfferta.getValue() < prezzo || !controllaP) {
-									PopupPanel popup = new PopupPanel(true);
-									popup.setWidget(new HTML("<font color='red'>Offerta non valida!</font>"));
-									popup.center();
-								}else {
-									double offriPrezzo = prezzoOfferta.getValue();
-									
-									DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
-									Date date = new Date();
-									Date dataGiusta = null;
-									String dataformat = dateFormat.format(date);
-									//String oggi = dateFormat.format(date);
-									
-									Offerta offerta = new Offerta();
-							            try {
-							                DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
-							                dataGiusta = dateTimeFormat.parse(dataformat);
-							                offerta.setDataOfferta(dataGiusta);
-							            } catch (Exception e)
-							            {
-							            	System.out.println(e);
-							            }
-									
-									offerta.setIdProdotto(id);
-									offerta.setUsername(Session.getInstance().getSession().getUsername());
-									offerta.setPrezzo(offriPrezzo);
-									
-									instanceLuckyBidderService.offri(offerta, new AsyncCallback<Boolean>(){
-										
-										@Override
-										public void onFailure(Throwable caught) {
-											PopupPanel popup = new PopupPanel(true);
-											popup.setWidget(new HTML("<font color='red'>Impossibile estrarre le informazioni: Errore nella connessione con il server</font>"));
-											popup.center();	
-											
-										}
-
-										@Override
-										public void onSuccess(Boolean result) {
-										
-												OffertaProdotto offertaProdotto = new OffertaProdotto(id,Session.getInstance().getSession().getUsername(), fromPanel);
-												OffertaProdotto.this.hide();
-												offertaProdotto.center();
-												offertaProdotto.show();
-												PopupPanel popup = new PopupPanel(true);
-												popup.setWidget(new HTML("<font color='green'size='5'>Offerta inserita correttamente!</font>"));
-												popup.center();
-												
-												TopBar topbar = new TopBar();
-												HomeProdotti homeProdotti = new HomeProdotti();
-												RootPanel.get().clear();
-												RootPanel.get().add(topbar);
-												RootPanel.get().add(homeProdotti);
-											
-											
-										}
-										
-									});
-						
-								}
-							}
-						
-						});	
-					}
-				});
+							
+							});	
+						}
+					});
+				} else {
+					prezzoOfferta.setEnabled(false);
+					btnOffri.setEnabled(false);
+				}
+				
 				
 			}
 			

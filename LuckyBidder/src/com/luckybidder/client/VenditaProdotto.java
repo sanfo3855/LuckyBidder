@@ -2,6 +2,7 @@ package com.luckybidder.client;
 
 import com.google.gwt.user.client.ui.Label;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -22,6 +23,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.datepicker.client.DateBox;
+import com.luckybidder.shared.Categoria;
 import com.luckybidder.shared.Prodotto;
 
 public class VenditaProdotto extends HorizontalPanel{
@@ -95,11 +97,25 @@ public class VenditaProdotto extends HorizontalPanel{
 		Label labelCategoria = new Label("Categoria");
 		lCategoria = new ListBox();
 		lCategoria.setWidth("150px");
-		lCategoria.addItem("Abbigliamento");
-		lCategoria.addItem("Casa");
-		lCategoria.addItem("Elettronica");
-		lCategoria.addItem("Giardinaggio");
-		lCategoria.addItem("Sport");
+		
+		instanceLuckyBidderService.getAllCategorie( new AsyncCallback<ArrayList<Categoria>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Categoria> result) {
+				for( Categoria categoria: result) {
+					lCategoria.addItem(categoria.getNomeCategoria());
+				}
+				
+			}
+			
+		});
+
 		Label requiredCategoria = new Label("(*)");
 		grid.setWidget(4, 0, labelCategoria);
 		grid.setWidget(4, 1, lCategoria);
@@ -129,8 +145,6 @@ public class VenditaProdotto extends HorizontalPanel{
 				String vincitore = "Nessuno";
 				String nomeMigliore = "Nessuno";
 				String username = Session.getInstance().getSession().getUsername();
-				
-				
 				int index = lCategoria.getSelectedIndex();
 				String categoria = lCategoria.getValue(index);
 				

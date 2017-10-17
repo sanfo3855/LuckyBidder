@@ -1,5 +1,7 @@
 package com.luckybidder.client;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -16,6 +18,8 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
 import com.luckybidder.shared.Prodotto;
 import com.luckybidder.shared.Offerta;
 
@@ -146,10 +150,7 @@ public class Profilo extends HorizontalPanel{
 		
 		final CellTable<Prodotto> table = new CellTable<Prodotto>();
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
-		table.setWidth("710px");
-		table.setColumnWidth(1, "270px");
-		table.setColumnWidth(1, "270px");
-		table.setColumnWidth(2, "270px");
+		table.setWidth("450px");
 		
 		//COLONNA PRODOTTO
 		TextColumn<Prodotto> txtColName = new TextColumn<Prodotto>(){
@@ -217,10 +218,7 @@ public class Profilo extends HorizontalPanel{
 		//TABELLA OFFERTA
 		final CellTable<Offerta> tableOfferte = new CellTable<Offerta>();
 		tableOfferte.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
-		tableOfferte.setWidth("710px");
-		tableOfferte.setColumnWidth(0, "270px");
-		tableOfferte.setColumnWidth(1, "270px");
-		tableOfferte.setColumnWidth(2, "270px");
+		tableOfferte.setWidth("450px");
 
 		//COLONNA ID PRODOTTO
 		TextColumn<Offerta> txtColId = new TextColumn<Offerta>() {
@@ -246,7 +244,16 @@ public class Profilo extends HorizontalPanel{
 		TextColumn<Offerta> txtColData = new TextColumn<Offerta>() {
 			@Override
 			public String getValue(Offerta object) {
-				return object.getData();
+				String dataString = null;
+				Date datatoConvert = object.getDataOfferta();
+				DateTimeFormat df = DateTimeFormat.getFormat("dd/MM/yyyy");
+				try{
+					dataString = df.format(datatoConvert);
+					
+				   }catch (Exception ex ){
+					System.out.println(ex);
+				   }
+				return dataString;
 			}
 		};
 		tableOfferte.addColumn(txtColData, "Data");
@@ -265,7 +272,7 @@ public class Profilo extends HorizontalPanel{
 				ArrayList<Offerta> offerte = new ArrayList<Offerta>(result);
 				tableOfferte.setRowCount(offerte.size(), true);
 				
-			/*	final SingleSelectionModel<Offerta> selectionModel = new SingleSelectionModel<Offerta>();
+				final SingleSelectionModel<Offerta> selectionModel = new SingleSelectionModel<Offerta>();
 				tableOfferte.setSelectionModel(selectionModel);
 				//Alla selezione di un oggetto diverso
 				selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -275,12 +282,12 @@ public class Profilo extends HorizontalPanel{
 						//Se abbiamo selezionato una riga
 						if (selected != null) {
 							//visualizzeremo un popup contenente i dettagli dell'oggetto su cui � stata effettuata l'offerta
-							GestioneOfferta visualizzaInfo = new GestioneOfferta(selected.getIdProdotto(),Session.getInstance().getSession().getUsername());
+							OffertaProdotto visualizzaInfo = new OffertaProdotto(selected.getIdProdotto(),Session.getInstance().getSession().getUsername(),"Profilo", null);
 							visualizzaInfo.center();
 							visualizzaInfo.show();
 						}
 					}
-				});*/
+				});
 				
 				tableOfferte.setRowData(0, offerte);
 				
@@ -292,8 +299,9 @@ public class Profilo extends HorizontalPanel{
 			}
 		
 		});
-		//this.add(decoratorpanel3);
+		
 		this.add(verticalPanelGeneral);
+		this.add(new DomandaRisposta(Session.getInstance().getSession().getUsername()));
 	
 	}
 }

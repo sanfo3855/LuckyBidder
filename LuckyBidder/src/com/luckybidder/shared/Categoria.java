@@ -1,6 +1,7 @@
 package com.luckybidder.shared;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -9,6 +10,7 @@ public class Categoria implements Serializable, IsSerializable {
 	
 	private String nomeCategoria;
 	private Categoria padre;
+	private ArrayList<Categoria> categorieFiglie;
 	private int id;
 	
 	/**
@@ -17,9 +19,8 @@ public class Categoria implements Serializable, IsSerializable {
 	 * @param id
 	 * @param nomeCat
 	 */
-	public Categoria(Categoria father, int id, String nomeCat) {
-		this.setPadre(father);
-		this.setId(id);
+	public Categoria(String nomeCat) {
+		categorieFiglie = new ArrayList<Categoria>();
 		this.setNomeCategoria(nomeCat);
 	}
 	
@@ -73,5 +74,20 @@ public class Categoria implements Serializable, IsSerializable {
 		this.id = id;
 	}
 
+	public ArrayList<Categoria> getCategorieFiglie() {
+		return categorieFiglie;
+	}
 
+	public void setCategoriaFiglia(Categoria categoria) {
+		this.categorieFiglie.add(categoria);
+	}
+	
+	public void setCategorieFiglie(ArrayList<Categoria> categorieFiglie) {
+		this.categorieFiglie = categorieFiglie;
+	}
+	
+	@Override
+	public String toString() {
+		return "\nID: " + this.id + "\nNome: " + this.nomeCategoria + "\nPadre: " + this.padre +"\n";
+	}
 }

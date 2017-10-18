@@ -1,8 +1,6 @@
 package com.luckybidder.client;
 
 import java.util.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -211,7 +209,10 @@ public class OffertaProdotto extends DialogBox {
 				verticalpanel.setCellVerticalAlignment(btnOffri, HasVerticalAlignment.ALIGN_BOTTOM);
 				verticalpanel.setCellHorizontalAlignment(btnOffri, HasHorizontalAlignment.ALIGN_CENTER);
 				btnOffri.setWidth("132px");
-				
+				if(usernameVenditore.contentEquals(Session.getInstance().getSession().getUsername())) {
+					btnOffri.setEnabled(false);
+					prezzoOfferta.setEnabled(false);
+				}
 				btnProfilo.setText("Chiudi");
 				verticalpanel.add(btnProfilo);
 				verticalpanel.setCellVerticalAlignment(btnProfilo, HasVerticalAlignment.ALIGN_BOTTOM);
@@ -334,7 +335,7 @@ public class OffertaProdotto extends DialogBox {
 				
 				//Domanda e Risposta
 				if(Session.getInstance().getSession() != null) {
-					if(!Session.getInstance().getSession().getUsername().equals("admin")) {
+					if(!Session.getInstance().getSession().getUsername().equals("admin") && !Session.getInstance().getSession().getUsername().equals(usernameVenditore)) {
 						hpGeneral.add(vpDomandaRisposta);
 						final Label labelDomanda = new Label("DOMANDA");
 						instanceLuckyBidderService.getDomanda(Session.getInstance().getSession().getUsername(),id, new AsyncCallback<Domanda>() {

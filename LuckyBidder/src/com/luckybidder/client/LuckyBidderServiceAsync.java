@@ -46,6 +46,8 @@ public interface LuckyBidderServiceAsync {
 
 	void getDomandeToUsername(String usernameVendProdotto, AsyncCallback<ArrayList<Domanda>> asyncCallback);
 
-	void inviaRisposta(int idDomanda, String text, AsyncCallback<Boolean> asyncCallback);	
+	void inviaRisposta(int idDomanda, String text, AsyncCallback<Boolean> asyncCallback);
+	
+	void eliminaProdotto(int idProdotto, AsyncCallback<Boolean> asyncCallback);
 
 }

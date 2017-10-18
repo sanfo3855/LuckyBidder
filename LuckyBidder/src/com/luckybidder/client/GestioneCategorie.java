@@ -245,8 +245,16 @@ public class GestioneCategorie extends VerticalPanel {
 		decoratorPanel.add(hp);
 		
 		decoratorPanel.getElement().setAttribute("style", "margin: 10px");
+		VerticalPanel vpTabEliminazioni = new VerticalPanel();
+		HorizontalPanel hpProdottoOfferta = new HorizontalPanel();
+		HorizontalPanel hpDomandaRisposta = new HorizontalPanel();
+		EliminaProdotto eliminaProdotto = new EliminaProdotto();
+		hpProdottoOfferta.add(eliminaProdotto);
+		vpTabEliminazioni.add(hpProdottoOfferta);
+		vpTabEliminazioni.add(hpDomandaRisposta);
 		
 		this.add(decoratorPanel);
+		this.add(vpTabEliminazioni);
 		
 	}
 	

@@ -155,7 +155,7 @@ public class OffertaProdotto extends DialogBox {
 							Label lblOffertaMaxUser = new Label(migliorOfferente);
 							grid.setWidget(5, 1, lblOffertaMaxUser);
 							
-							if(migliorOfferente.equals(Session.getInstance().getSession().getUsername())) {
+							if(migliorOfferente.equals(Session.getInstance().getSession().getUsername()) || Session.getInstance().getSession().getUsername().equals("admin")) {
 								prezzoOfferta.setVisible(false);
 								btnOffri.setVisible(false);
 							}

@@ -59,5 +59,10 @@ public class Domanda implements Serializable {
 	public void setNomeProdotto(String nomeProdotto) {
 		this.nomeProdotto = nomeProdotto;
 	}
+	
+	@Override
+	public String toString() {
+		return "id: " + this.idDomanda + "\n testo: " + this.testoDomanda + "\n id prodotto: " + this.idProdotto + "\n";
+	}
 
 }

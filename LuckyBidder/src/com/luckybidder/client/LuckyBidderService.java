@@ -64,5 +64,18 @@ public interface LuckyBidderService extends RemoteService{
 	boolean inviaRisposta(int idDomanda, String text);
 	
 	boolean eliminaProdotto(int idProdotto);
+
+	ArrayList<Offerta> getAllOfferte();
+
+	boolean eliminaOfferta(int idOfferta);
+
+	ArrayList<Risposta> getRisposte();
+
+	boolean eliminaRisposta(int idRisposta);
+
+	ArrayList<Domanda> getDomande();
+
+	boolean eliminaDomanda(int idDomanda);
+
 	
 }

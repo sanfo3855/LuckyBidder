@@ -22,7 +22,7 @@ public class TopBar extends VerticalPanel {
 		Button logoutButton = new Button("LOGOUT");
 		Button profiloButton = new Button("PROFILO");
 		Button vendiProdottoButton = new Button("VENDI PRODOTTO");
-		Button gestioneCategorieButton = new Button("GESTIONE CATEGORIE");
+		Button gestioneCategorieButton = new Button("GESTIONE ADMIN");
 		Button loginButton = new Button("LOGIN");
 		
 

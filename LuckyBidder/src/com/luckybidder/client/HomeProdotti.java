@@ -30,6 +30,7 @@ import com.luckybidder.shared.Prodotto;
 public class HomeProdotti extends HorizontalPanel{
 	
 	private String filtroCategoria;
+	private String filtroSelezionato;
 	private ArrayList<Categoria> categorieFiglieFiltro = new ArrayList<Categoria>();
 	
 	private void categorieFiglie(ArrayList<Categoria> list, Categoria padre) {
@@ -37,17 +38,17 @@ public class HomeProdotti extends HorizontalPanel{
 		if(padre != null) {
 			GWT.log(padre.toString());
 			if(padre.getNomeCategoria().equals("Stop")) {
-				GWT.log("STOP");
+				//GWT.log("STOP");
 				return;
 			}
 			for(Categoria pointed : list) {
 					if(pointed.getPadre().getNomeCategoria().equals(padre.getNomeCategoria())) {
-						if(pointed.getCategorieFiglie().size()>0) {
+						if(pointed.getPadre().getCategorieFiglie().size()>0) {
 							categorieFiglie(list, pointed);
 						} else {
 							categorieFiglie(list, new Categoria("Stop"));
 						}
-						pointed.toString();
+						//pointed.toString();
 						categorieFiglieFiltro.add(pointed);
 						
 					}
@@ -98,6 +99,7 @@ public class HomeProdotti extends HorizontalPanel{
 					p = new Categoria(filtroCategoria);
 				}
 				categorieFiglie(result, p);
+				GWT.log(categorieFiglieFiltro.toString());
 				int i = 0;
 				for(Categoria cat : categorieFiglieFiltro) {
 					listCategorieDisponibili.addItem(cat.getNomeCategoria());
@@ -108,18 +110,100 @@ public class HomeProdotti extends HorizontalPanel{
 					hpFiltraAncora.add(listCategorieDisponibili);
 					hpFiltraAncora.add(filtraAncora);
 					
+					instanceLuckyBidderService.getProdotti(new AsyncCallback<ArrayList<Prodotto>>(){
+						@Override
+						public void onFailure(Throwable caught) {
+							PopupPanel popup = new PopupPanel(true);
+							popup.setWidget(new HTML("<font color='red'>Impossibile estrarre le informazioni: Errore nella connessione con il server</font>"));
+							popup.center();	
+
+						};
+						
+						@Override
+						public void onSuccess(ArrayList<Prodotto> result) {
+							GWT.log(filtroCategoria);
+							ArrayList<Prodotto> prodotti = new ArrayList<Prodotto>();
+							
+							for(Prodotto prodotto : result) {
+								if(prodotto.getCategoria().equals(filtroCategoria)) {
+									prodotti.add(prodotto);
+								} else {
+									for(Categoria catFiglia : categorieFiglieFiltro) {
+										if(prodotto.getCategoria().equals(catFiglia.getNomeCategoria())) {
+											prodotti.add(prodotto);
+										}
+									}
+								}
+							}
+							GWT.log(prodotti.toString());
+							CellTable<Prodotto> table = new CellTable<Prodotto>();
+							table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+							
+							TextColumn<Prodotto> txtColName = new TextColumn<Prodotto>() {
+								@Override
+
+								public String getValue(Prodotto object) {
+									return object.getNomeProdotto();
+								}
+							};
+							table.addColumn(txtColName, "PRODOTTI IN VENDITA");
+							
+							TextColumn<Prodotto> txtColScadenza = new TextColumn<Prodotto>() {
+								@Override
+								
+								public String getValue(Prodotto object) {
+									String stToPrint = "";
+									if(object.getDataScadenza() != null) {
+										Date dateToConvert = object.getDataScadenza();
+										DateTimeFormat fm = DateTimeFormat.getFormat("dd/MM/yyyy");
+										stToPrint = fm.format(dateToConvert);
+									}
+									return stToPrint;
+									
+								}
+							};
+							table.addColumn(txtColScadenza, "SCADENZA");
+							
+							
+							final SingleSelectionModel<Prodotto> selectionModel = new SingleSelectionModel<Prodotto>();
+							table.setSelectionModel(selectionModel);
+							selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+								public void onSelectionChange(SelectionChangeEvent event) {
+									Prodotto selected = selectionModel.getSelectedObject();
+									if (selected != null) {
+										if(Session.getInstance().getSession() != null) {
+											OffertaProdotto visualizzaInfo = new OffertaProdotto(selected.getIdProdotto(),Session.getInstance().getSession().getUsername(), "Home", filtroCategoria);
+											visualizzaInfo.center();
+											visualizzaInfo.show();
+										} else {
+											OffertaProdotto visualizzaInfo = new OffertaProdotto(selected.getIdProdotto(),"", "Home", filtroCategoria);
+											visualizzaInfo.center();
+											visualizzaInfo.show();
+										}
+										
+									}
+								}
+							});
+							
+							table.setRowCount(prodotti.size(), true);
+							table.setRowData(0, prodotti);
+							verticalPanel.add(table);	
+										
+						}
+								
+					});
 				}
 			}
 			
 		});
 		
 		filtraAncora.addClickHandler( new ClickHandler() {
-			
 			@Override
 			public void onClick(ClickEvent event) {
+				filtroSelezionato = listCategorieDisponibili.getSelectedItemText();
 				RootPanel.get().clear();
 				RootPanel.get().add( new TopBar());
-				RootPanel.get().add( new HomeProdotti( listCategorieDisponibili.getSelectedItemText() ));
+				RootPanel.get().add( new HomeProdotti( filtroSelezionato ));
 			}
 			
 		});
@@ -142,86 +226,7 @@ public class HomeProdotti extends HorizontalPanel{
 		vpFiltro.add(resetFiltro);
 		vpFiltro.getElement().setAttribute("style", "margin: 10px");
 		
-		instanceLuckyBidderService.getProdotti(new AsyncCallback<ArrayList<Prodotto>>(){
-			@Override
-			public void onFailure(Throwable caught) {
-				PopupPanel popup = new PopupPanel(true);
-				popup.setWidget(new HTML("<font color='red'>Impossibile estrarre le informazioni: Errore nella connessione con il server</font>"));
-				popup.center();	
-
-			};
-			
-			@Override
-			public void onSuccess(ArrayList<Prodotto> result) {
-				
-				ArrayList<Prodotto> prodotti = new ArrayList<Prodotto>();
-				for(Prodotto prodotto : result) {
-					if(prodotto.getCategoria().equals(filtroCategoria)) {
-						prodotti.add(prodotto);
-					} else {
-						for(Categoria catFiglia : categorieFiglieFiltro) {
-							if(prodotto.getCategoria().equals(catFiglia.getNomeCategoria())) {
-								prodotti.add(prodotto);
-							}
-						}
-					}
-				};
-				CellTable<Prodotto> table = new CellTable<Prodotto>();
-				table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
-				
-				TextColumn<Prodotto> txtColName = new TextColumn<Prodotto>() {
-					@Override
-
-					public String getValue(Prodotto object) {
-						return object.getNomeProdotto();
-					}
-				};
-				table.addColumn(txtColName, "PRODOTTI IN VENDITA");
-				
-				TextColumn<Prodotto> txtColScadenza = new TextColumn<Prodotto>() {
-					@Override
-					
-					public String getValue(Prodotto object) {
-						String stToPrint = "";
-						if(object.getDataScadenza() != null) {
-							Date dateToConvert = object.getDataScadenza();
-							DateTimeFormat fm = DateTimeFormat.getFormat("dd/MM/yyyy");
-							stToPrint = fm.format(dateToConvert);
-						}
-						return stToPrint;
-						
-					}
-				};
-				table.addColumn(txtColScadenza, "SCADENZA");
-				
-				
-				final SingleSelectionModel<Prodotto> selectionModel = new SingleSelectionModel<Prodotto>();
-				table.setSelectionModel(selectionModel);
-				selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-					public void onSelectionChange(SelectionChangeEvent event) {
-						Prodotto selected = selectionModel.getSelectedObject();
-						if (selected != null) {
-							if(Session.getInstance().getSession() != null) {
-								OffertaProdotto visualizzaInfo = new OffertaProdotto(selected.getIdProdotto(),Session.getInstance().getSession().getUsername(), "Home", filtroCategoria);
-								visualizzaInfo.center();
-								visualizzaInfo.show();
-							} else {
-								OffertaProdotto visualizzaInfo = new OffertaProdotto(selected.getIdProdotto(),"", "Home", filtroCategoria);
-								visualizzaInfo.center();
-								visualizzaInfo.show();
-							}
-							
-						}
-					}
-				});
-				
-				table.setRowCount(prodotti.size(), true);
-				table.setRowData(0, prodotti);
-				verticalPanel.add(table);	
-							
-			}
-					
-		});
+		
 		HorizontalPanel hpGeneral = new HorizontalPanel();
 		hpGeneral.add(vpFiltro);
 		hpGeneral.add(verticalPanel);

@@ -3,6 +3,7 @@ package com.luckybidder.shared;
 import java.io.Serializable;
 import java.util.Date;
 
+@SuppressWarnings("serial")
 public class Offerta implements Serializable {
 
 	private String username;
@@ -10,17 +11,9 @@ public class Offerta implements Serializable {
 	private int idProdotto;
 	private double prezzo;
 	private int id ;
+	private String nomeProdotto;
 	
 	public Offerta() {}
-	
-	/*public Offerta(int id, int idProdotto, String username, double prezzo, Date dataOfferta) {
-		this.id = id;
-		this.idProdotto = idProdotto;
-		this.username = username;
-		this.prezzo = prezzo;	
-		this.dataOfferta = dataOfferta;
-	
-	}*/
 	
 	public int getId() {
 		return id;
@@ -70,5 +63,13 @@ public class Offerta implements Serializable {
 				"prezzo: " + this.prezzo +"\n";
 							  
 		return stringOfferta;
+	}
+
+	public String getNomeProdotto() {
+		return nomeProdotto;
+	}
+
+	public void setNomeProdotto(String nomeProdotto) {
+		this.nomeProdotto = nomeProdotto;
 	}
 }

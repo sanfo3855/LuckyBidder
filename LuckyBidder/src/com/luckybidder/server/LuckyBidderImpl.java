@@ -625,7 +625,6 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 				if(risposta.getValue().getIdRisposta() == idRisposta) {
 					//System.out.println(risposta.getValue().toString());
 					Risposta rispostaEliminata = new Risposta();
-					
 					rispostaEliminata = risposta.getValue();
 					rispostaEliminata.setIdRisposta(-1);
 					//System.out.println(rispostaEliminata.toString());
@@ -658,31 +657,29 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 
 	@Override
 	public boolean eliminaDomanda(int idDomanda) {
-		dbDomande = getDBDomande();
-		BTreeMap<Integer,Domanda> mapDomande= dbDomande.getTreeMap("MapDBDomande");
-		//System.out.println(mapRisposte.size());
-		if(!mapDomande.isEmpty()) {
-			for(Map.Entry<Integer, Domanda> domanda : mapDomande.entrySet()) {
-				if(domanda.getValue().getIdDomanda() == idDomanda) {
-					System.out.println(domanda.getValue().toString());
-					Domanda domandaEliminata = new Domanda();
-					domandaEliminata = domanda.getValue();
-					domandaEliminata.setIdDomanda(-1);
-					//System.out.println(rispostaEliminata.toString());
-					mapDomande.replace(idDomanda,domandaEliminata);
-					dbDomande.commit();
-					dbRisposte = getDBRisposte();
-					BTreeMap<Integer,Risposta> mapRisposte = dbRisposte.getTreeMap("MapDBRisposte");
-					for(Map.Entry<Integer, Risposta> risposta : mapRisposte.entrySet()) {
-						if(risposta.getValue().getIdDomandaRelativa() == domanda.getValue().getIdDomanda()) {
-							boolean eliminaRisposta = eliminaRisposta(risposta.getValue().getIdRisposta());
-							//mapRisposte.remove(risposta.getValue().getIdRisposta());
-						}
-					}
-					dbRisposte.commit();
+		dbRisposte = getDBRisposte();
+		BTreeMap<Integer,Risposta> mapRisposte= dbRisposte.getTreeMap("MapDBRisposte");
+		if(!mapRisposte.isEmpty()) {
+			for(Map.Entry<Integer, Risposta>risposta : mapRisposte.entrySet()) {
+				if(risposta.getValue().getIdDomandaRelativa() == idDomanda) {
+					boolean elimiaRisposta = eliminaRisposta(risposta.getValue().getIdRisposta());
 				}
 			}
 		}
+		dbRisposte.commit();
+		dbDomande = getDBDomande();
+		BTreeMap<Integer,Domanda> mapDomande = dbDomande.getTreeMap("MapDBDomande");
+		if(!mapDomande.isEmpty()) {
+			for(Map.Entry<Integer, Domanda>domanda : mapDomande.entrySet()) {
+				if(domanda.getValue().getIdDomanda() == idDomanda) {
+					Domanda domadaEliminata = new Domanda();
+					domadaEliminata = mapDomande.get(idDomanda);
+					domadaEliminata.setIdDomanda(-1);;
+					mapDomande.replace(idDomanda, domadaEliminata);
+				}
+			}
+		}
+		//System.out.println(mapRisposte.size());
 		dbDomande.commit();
 		return true;
 	}

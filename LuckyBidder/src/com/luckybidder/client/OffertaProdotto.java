@@ -289,6 +289,7 @@ public class OffertaProdotto extends DialogBox {
 										offerta.setIdProdotto(id);
 										offerta.setUsername(Session.getInstance().getSession().getUsername());
 										offerta.setPrezzo(offriPrezzo);
+										offerta.setNomeProdotto(nomeProdotto);
 										
 										instanceLuckyBidderService.offri(offerta, new AsyncCallback<Boolean>(){
 											

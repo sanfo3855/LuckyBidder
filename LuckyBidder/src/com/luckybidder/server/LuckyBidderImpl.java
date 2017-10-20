@@ -99,19 +99,20 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 		ArrayList<Prodotto> listaProdotti = new ArrayList<Prodotto>();
 		if(!mapProdotti.isEmpty()){
 			for(Map.Entry<Integer, Prodotto> prodotto : mapProdotti.entrySet()){
-				
-				Prodotto prodottoEstratto = new Prodotto();
-				
-				Date controllaData = null;
-				prodottoEstratto = prodotto.getValue();
-				controllaData = prodottoEstratto.getDataScadenza();
-				
-				Date dataOggi = Calendar.getInstance().getTime();
-				if((controllaData.compareTo(dataOggi)<0)&& (prodottoEstratto.getStato().contentEquals("APERTA"))) {
-					modificaScadenza(prodottoEstratto, prodottoEstratto.getIdProdotto());
-				}
-				if(!prodottoEstratto.getStato().equals("CHIUSA")) {
+				if(prodotto.getValue().getIdProdotto() != -1) {
+					Prodotto prodottoEstratto = new Prodotto();
+					
+					Date controllaData = null;
+					prodottoEstratto = prodotto.getValue();
+					controllaData = prodottoEstratto.getDataScadenza();
+					
+					Date dataOggi = Calendar.getInstance().getTime();
+					if((controllaData.compareTo(dataOggi)<0)&& (prodottoEstratto.getStato().contentEquals("APERTA"))) {
+						modificaScadenza(prodottoEstratto, prodottoEstratto.getIdProdotto());
+					}
+					if(!prodottoEstratto.getStato().equals("CHIUSA")) {
 					listaProdotti.add(prodottoEstratto);
+					}
 				}
 			}
 		}
@@ -159,7 +160,7 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 		if(!mapOfferte.isEmpty()) {
 			for(Map.Entry<Integer, Offerta> offerta : mapOfferte.entrySet()){
 				//Se l'offerta � riferita all'oggetto, non � stata eliminata ed � maggiore dell' ultimo prezzo massimo
-				if (offerta.getValue().getIdProdotto() == idProdotto && offerta.getValue().getPrezzo()>prezzoMax && !(offerta.getValue().getIdProdotto()==-1)){
+				if (offerta.getValue().getIdProdotto() == idProdotto && offerta.getValue().getPrezzo()>prezzoMax && !(offerta.getValue().getId()==-1)){
 					offertaMax = offerta.getValue();
 					//Si prende come offerta massima
 					prezzoMax=offertaMax.getPrezzo();
@@ -253,9 +254,10 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 			ArrayList<Offerta> listaOfferte= new ArrayList<Offerta>();
 			if(!mapOfferte.isEmpty()) {
 				for(Map.Entry<Integer, Offerta> offerta : mapOfferte.entrySet()){
-					if(offerta.getValue().getUsername().equals(username) && !(offerta.getValue().getIdProdotto()==-1)) {
+					if(offerta.getValue().getUsername().equals(username) && !(offerta.getValue().getId()==-1)) {
 						offertaFatta = offerta.getValue();
 						listaOfferte.add(offertaFatta);
+						//System.out.print(arg0);
 					}
 				}
 				
@@ -412,7 +414,7 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 		Domanda domandaReturn = null;
 		if(!mapDomande.isEmpty()) {
 			for(Map.Entry<Integer, Domanda> domanda : mapDomande.entrySet()) {
-				if(domanda.getValue().getIdProdotto()==id && domanda.getValue().getDaCheutente().equals(username)) {
+				if(domanda.getValue().getIdProdotto()==id && domanda.getValue().getDaCheutente().equals(username) && domanda.getValue().getIdDomanda()!=-1) {
 					domandaReturn = domanda.getValue();
 				}
 			}
@@ -443,7 +445,7 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 		Risposta returnRisposta = null;
 		BTreeMap<Integer,Risposta> mapRisposte = dbRisposte.getTreeMap("MapDBRisposte");
 		for(Map.Entry<Integer, Risposta> risposta : mapRisposte.entrySet()) {
-			if(risposta.getValue().getIdDomandaRelativa() == idDomanda) {
+			if(risposta.getValue().getIdDomandaRelativa() == idDomanda && risposta.getValue().getIdRisposta()!=-1) {
 				returnRisposta = risposta.getValue();
 			}
 		}
@@ -458,7 +460,7 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 		ArrayList<Domanda> listResult = new ArrayList<Domanda>();
 		if(!mapDomande.isEmpty()) {
 			for(Map.Entry<Integer, Domanda> domanda : mapDomande.entrySet()) {
-				if(domanda.getValue().getNomeUtenteVenditore().equals(usernameVendProdotto)) {
+				if(domanda.getValue().getNomeUtenteVenditore().equals(usernameVendProdotto)&&domanda.getValue().getIdDomanda()!=-1) {
 					System.out.println("Trovata domanda per " + usernameVendProdotto);
 					listResult.add(domanda.getValue());
 				}
@@ -476,6 +478,97 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 	}
 	
 	@Override
+	public boolean eliminaOfferta(int idOfferta) {
+		System.out.println("Offerta selezionata: "+idOfferta);
+		dbOfferte = getDBOfferte();
+		BTreeMap<Integer,Offerta> mapOfferte = dbOfferte.getTreeMap("MapOfferte");
+		System.out.println(mapOfferte.size());
+		if(!mapOfferte.isEmpty()) {
+			for(Map.Entry<Integer, Offerta>offerta : mapOfferte.entrySet()) {
+				if(offerta.getValue().getId() == idOfferta) {
+					System.out.println(offerta.getValue().toString());
+					Offerta offertaEliminata = new Offerta();
+					offertaEliminata = offerta.getValue();
+					offertaEliminata.setIdOfferta(-1);
+					System.out.println(offertaEliminata.toString());
+					mapOfferte.replace(idOfferta,offertaEliminata);
+					dbOfferte.commit();
+				}
+			}
+		}
+		dbOfferte.commit();
+		return true;
+	}
+	
+	@Override
+	public boolean eliminaProdotto(int idProdotto) {
+	
+		dbProdotti = getDBProdotti();
+		dbOfferte = getDBOfferte();
+		dbRisposte = getDBRisposte();
+		
+		BTreeMap<Integer,Offerta> mapOfferte = dbOfferte.getTreeMap("MapOfferte");
+		if(!mapOfferte.isEmpty()) {
+			for(Map.Entry<Integer,Offerta> offerta : mapOfferte.entrySet()) {
+				if(offerta.getValue().getIdProdotto() == idProdotto && offerta.getValue().getId()!=-1) {
+					System.out.println("Trovata offerta " + idProdotto);
+					System.out.println(offerta.getValue().toString());
+					boolean elimaOfferta = eliminaOfferta(offerta.getValue().getId());
+				}
+			}
+			
+		}
+		dbOfferte.commit();
+
+		dbDomande = getDBDomande();
+		BTreeMap<Integer,Domanda> mapDomande = dbDomande.getTreeMap("MapDBDomande");
+		System.out.println("SIZE " + mapDomande.size());
+		System.out.println("ID PRODOTTO " + idProdotto);
+		if(!mapDomande.isEmpty()) {
+			for(Map.Entry<Integer, Domanda> domanda : mapDomande.entrySet()) {
+				if(domanda.getValue().getIdProdotto() == idProdotto) {
+					System.out.println("Prodotto: " + idProdotto + "DOmanda: " + domanda.getValue().getIdDomanda());
+					boolean eliminaDomanda = eliminaDomanda(domanda.getValue().getIdDomanda());
+					/*BTreeMap<Integer,Risposta> mapRisposte = dbRisposte.getTreeMap("MapDBRispsote");
+					if(!mapRisposte.isEmpty()) {
+						for(Map.Entry<Integer, Risposta>risposta : mapRisposte.entrySet()) {
+							if(risposta.getValue().getIdDomandaRelativa() == domanda.getValue().getIdDomanda()) {
+								boolean eliminaRisposta = eliminaRisposta(risposta.getValue().getIdRisposta());
+								//mapRisposte.remove(risposta.getValue().getIdRisposta());
+								
+							}
+						}
+						
+					}
+					dbRisposte.commit();
+					Domanda domandaEliminata = new Domanda();
+					domandaEliminata = domanda.getValue();
+					domandaEliminata.setIdDomanda(-1);
+					mapDomande.replace(domanda.getValue().getIdDomanda(), domandaEliminata);*/
+					//mapDomande.remove(domanda.getValue().getIdDomanda());
+				}
+			}
+			
+		}
+		dbDomande.commit();
+		BTreeMap<Integer,Prodotto> mapProdotti = dbProdotti.getTreeMap("MapProdotti");
+		if(!mapProdotti.isEmpty()) {
+			for(Map.Entry<Integer,Prodotto> prodotto : mapProdotti.entrySet()) {
+				if(prodotto.getValue().getIdProdotto() == idProdotto) {
+					//System.out.print(prodotto.getValue().toString());
+					Prodotto prodottoEliminato = new Prodotto();
+					prodottoEliminato = mapProdotti.get(idProdotto);
+					prodottoEliminato.setIdProdotto(-1);
+					mapProdotti.replace(idProdotto, prodottoEliminato);
+					//mapProdotti.remove(prodotto.getValue().getIdProdotto());
+				}
+			}
+		}
+	dbProdotti.commit();
+	return true;
+	}
+		
+	@Override
 	public boolean inviaRisposta(int idDomanda, String testoRisposta) {
 		dbRisposte = getDBRisposte();
 		BTreeMap<Integer,Risposta> mapRisposte = dbRisposte.getTreeMap("MapDBRisposte");
@@ -486,5 +579,108 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 		mapRisposte.put(mapRisposte.size()+1, risposta);
 		dbRisposte.commit();
 		return false;
+	}
+
+	@Override
+	public ArrayList<Offerta> getAllOfferte() {
+		dbOfferte = getDBOfferte();
+		BTreeMap<Integer,Offerta> mapOfferte=dbOfferte.getTreeMap("MapOfferte");
+		ArrayList<Offerta> listOfferte = new ArrayList<Offerta>();
+		if(!mapOfferte.isEmpty()) {
+			for(Map.Entry<Integer, Offerta> offerta : mapOfferte.entrySet()) {
+				Offerta getOfferta = new Offerta();
+				getOfferta=offerta.getValue();
+				listOfferte.add(getOfferta);
+			}
+		}
+		
+		return listOfferte;
+	}
+
+	@Override
+	public ArrayList<Risposta> getRisposte() {
+		dbRisposte = getDBRisposte();
+		BTreeMap<Integer,Risposta> mapRisposte = dbRisposte.getTreeMap("MapDBRisposte");
+		ArrayList<Risposta> listRisposte = new ArrayList<Risposta>();
+		if(!mapRisposte.isEmpty()) {
+			for(Map.Entry<Integer, Risposta> risposta : mapRisposte.entrySet()) {
+				//System.out.println(risposta.getValue().toString());
+				if(risposta.getValue().getIdRisposta()!=-1) {
+					Risposta getRisposta = new Risposta();
+					getRisposta = risposta.getValue();
+					listRisposte.add(getRisposta);
+				}
+			}
+		}
+		return listRisposte;
+	}
+
+	@Override
+	public boolean eliminaRisposta(int idRisposta) {
+		dbRisposte = getDBRisposte();
+		BTreeMap<Integer,Risposta> mapRisposte = dbRisposte.getTreeMap("MapDBRisposte");
+		//System.out.println(mapRisposte.size());
+		if(!mapRisposte.isEmpty()) {
+			for(Map.Entry<Integer, Risposta> risposta : mapRisposte.entrySet()) {
+				if(risposta.getValue().getIdRisposta() == idRisposta) {
+					//System.out.println(risposta.getValue().toString());
+					Risposta rispostaEliminata = new Risposta();
+					rispostaEliminata = risposta.getValue();
+					rispostaEliminata.setIdRisposta(-1);
+					//System.out.println(rispostaEliminata.toString());
+					mapRisposte.replace(idRisposta,rispostaEliminata);
+					dbRisposte.commit();
+				}
+			}
+		}
+		dbRisposte.commit();
+		return true;
+	}
+
+	@Override
+	public ArrayList<Domanda> getDomande() {
+		dbDomande = getDBDomande();
+		BTreeMap<Integer,Domanda> mapDomande = dbDomande.getTreeMap("MapDBDomande");
+		ArrayList<Domanda> listDomande = new ArrayList<Domanda>();
+		if(!mapDomande.isEmpty()) {
+			for(Map.Entry<Integer, Domanda> domanda : mapDomande.entrySet()) {
+				//System.out.println(risposta.getValue().toString());
+				if(domanda.getValue().getIdDomanda()!=-1) {
+					Domanda getDomanda = new Domanda();
+					getDomanda = domanda.getValue();
+					listDomande.add(getDomanda);
+				}
+			}
+		}
+		return listDomande;
+	}
+
+	@Override
+	public boolean eliminaDomanda(int idDomanda) {
+		dbRisposte = getDBRisposte();
+		BTreeMap<Integer,Risposta> mapRisposte= dbRisposte.getTreeMap("MapDBRisposte");
+		if(!mapRisposte.isEmpty()) {
+			for(Map.Entry<Integer, Risposta>risposta : mapRisposte.entrySet()) {
+				if(risposta.getValue().getIdDomandaRelativa() == idDomanda && risposta.getValue().getIdRisposta() != -1) {
+					boolean elimiaRisposta = eliminaRisposta(risposta.getValue().getIdRisposta());
+				}
+			}
+		}
+		dbRisposte.commit();
+		dbDomande = getDBDomande();
+		BTreeMap<Integer,Domanda> mapDomande = dbDomande.getTreeMap("MapDBDomande");
+		if(!mapDomande.isEmpty()) {
+			for(Map.Entry<Integer, Domanda>domanda : mapDomande.entrySet()) {
+				if(domanda.getValue().getIdDomanda() == idDomanda && domanda.getValue().getIdDomanda() != -1) {
+					Domanda domadaEliminata = new Domanda();
+					domadaEliminata = mapDomande.get(idDomanda);
+					domadaEliminata.setIdDomanda(-1);;
+					mapDomande.replace(idDomanda, domadaEliminata);
+				}
+			}
+		}
+		//System.out.println(mapRisposte.size());
+		dbDomande.commit();
+		return true;
 	}
 }

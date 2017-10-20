@@ -510,7 +510,7 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 		BTreeMap<Integer,Offerta> mapOfferte = dbOfferte.getTreeMap("MapOfferte");
 		if(!mapOfferte.isEmpty()) {
 			for(Map.Entry<Integer,Offerta> offerta : mapOfferte.entrySet()) {
-				if(offerta.getValue().getIdProdotto() == idProdotto) {
+				if(offerta.getValue().getIdProdotto() == idProdotto && offerta.getValue().getId()!=-1) {
 					System.out.println("Trovata offerta " + idProdotto);
 					System.out.println(offerta.getValue().toString());
 					boolean elimaOfferta = eliminaOfferta(offerta.getValue().getId());
@@ -661,7 +661,7 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 		BTreeMap<Integer,Risposta> mapRisposte= dbRisposte.getTreeMap("MapDBRisposte");
 		if(!mapRisposte.isEmpty()) {
 			for(Map.Entry<Integer, Risposta>risposta : mapRisposte.entrySet()) {
-				if(risposta.getValue().getIdDomandaRelativa() == idDomanda) {
+				if(risposta.getValue().getIdDomandaRelativa() == idDomanda && risposta.getValue().getIdRisposta() != -1) {
 					boolean elimiaRisposta = eliminaRisposta(risposta.getValue().getIdRisposta());
 				}
 			}
@@ -671,7 +671,7 @@ public class LuckyBidderImpl extends RemoteServiceServlet implements LuckyBidder
 		BTreeMap<Integer,Domanda> mapDomande = dbDomande.getTreeMap("MapDBDomande");
 		if(!mapDomande.isEmpty()) {
 			for(Map.Entry<Integer, Domanda>domanda : mapDomande.entrySet()) {
-				if(domanda.getValue().getIdDomanda() == idDomanda) {
+				if(domanda.getValue().getIdDomanda() == idDomanda && domanda.getValue().getIdDomanda() != -1) {
 					Domanda domadaEliminata = new Domanda();
 					domadaEliminata = mapDomande.get(idDomanda);
 					domadaEliminata.setIdDomanda(-1);;

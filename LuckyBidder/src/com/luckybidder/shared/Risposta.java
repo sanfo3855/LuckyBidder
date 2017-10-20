@@ -33,5 +33,10 @@ public class Risposta implements Serializable{
 		Risposta = risposta;
 	}
 	
+	@Override
+	public String toString() {
+		return "id: " + this.idRisposta + "\n id domanda: "+ this.idDomandaRelativa + "\n testo: " + this.Risposta + "\n"; 
+	}
+	
 	
 }

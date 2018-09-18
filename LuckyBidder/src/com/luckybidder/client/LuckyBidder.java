@@ -18,6 +18,9 @@ public class LuckyBidder implements EntryPoint {
 
 		Login login = new Login();
 		rootpanel.add(login);
+		
+		/*GestioneCategorie g = new GestioneCategorie();
+		rootpanel.add(g);*/
 
 	}
 }

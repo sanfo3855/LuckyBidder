@@ -2,12 +2,21 @@ package com.luckybidder.client;
 
 import com.google.gwt.user.client.ui.Label;
 
+import java.util.ArrayList;
 import java.util.Date;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -22,6 +31,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.datepicker.client.DateBox;
+import com.luckybidder.shared.Categoria;
 import com.luckybidder.shared.Prodotto;
 
 public class VenditaProdotto extends HorizontalPanel{
@@ -64,18 +74,8 @@ public class VenditaProdotto extends HorizontalPanel{
 		//PREZZO VENDITA
 		Label labelPrezzoV = new Label("Prezzo base di vendita");
 		tPrezzoVendita = new TextBox();
-		tPrezzoVendita.addKeyPressHandler(new KeyPressHandler() {
-		    public void onKeyPress(KeyPressEvent event) {
-		        String input = tPrezzoVendita.getText();
-		        if (!input.matches("[0-9]*")) {
-		        	PopupPanel popup = new PopupPanel(true);
-					popup.setWidget(new HTML("<font color='red'>Inserire prezzo non caratteri<br></font>"));
-					popup.center();
-		            return;
-		        }
-		    }
-		});
 		tPrezzoVendita.setWidth("150px");
+		
 		Label requiredPrezzoV = new Label("(*)");
 		grid.setWidget(2, 0, labelPrezzoV);
 		grid.setWidget(2, 1, tPrezzoVendita);
@@ -95,11 +95,25 @@ public class VenditaProdotto extends HorizontalPanel{
 		Label labelCategoria = new Label("Categoria");
 		lCategoria = new ListBox();
 		lCategoria.setWidth("150px");
-		lCategoria.addItem("Abbigliamento");
-		lCategoria.addItem("Casa");
-		lCategoria.addItem("Elettronica");
-		lCategoria.addItem("Giardinaggio");
-		lCategoria.addItem("Sport");
+		
+		instanceLuckyBidderService.getAllCategorie( new AsyncCallback<ArrayList<Categoria>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Categoria> result) {
+				for( Categoria categoria: result) {
+					lCategoria.addItem(categoria.getNomeCategoria());
+				}
+				
+			}
+			
+		});
+
 		Label requiredCategoria = new Label("(*)");
 		grid.setWidget(4, 0, labelCategoria);
 		grid.setWidget(4, 1, lCategoria);
@@ -117,25 +131,66 @@ public class VenditaProdotto extends HorizontalPanel{
 		
 		verticalpanel.add(gridButton);
 		
+		
+		tPrezzoVendita.addKeyPressHandler(new KeyPressHandler() {
+			@Override
+		    public void onKeyPress(KeyPressEvent event) {
+				String carattere = String.valueOf(event.getCharCode());
+				String input = tPrezzoVendita.getText();
+				tPrezzoVendita.getElement().setAttribute("style", "background: pink;");
+	            tPrezzoVendita.setWidth("150px");
+
+		        if (carattere.matches("[0-9]")) {
+		        	if(input.matches("[0-9]*")) {
+			            tPrezzoVendita.getElement().setAttribute("style", "background: white;");
+			            tPrezzoVendita.setWidth("150px");
+		        	}
+		        }
+		    }
+		});
+		
+		tPrezzoVendita.addKeyUpHandler( new KeyUpHandler() {
+
+			@Override
+			public void onKeyUp(KeyUpEvent event) {
+				if(event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE) {
+					if(tPrezzoVendita.getText().matches("[0-9]*")) {
+						tPrezzoVendita.getElement().setAttribute("style", "backgrond: white");
+						tPrezzoVendita.setWidth("150px");
+					}
+				}
+				
+			}
+			
+		});
+		
+		
 		bVendita.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				
-				
-				String nomeOggetto = tNomeOggetto.getValue();
-				String descrizione = tDescrizione.getValue();
-				Double prezzoBase = Double.parseDouble(tPrezzoVendita.getValue());
+			public void onClick(ClickEvent event) {	
+				String nomeOggetto = null;
+				if(!tNomeOggetto.getText().isEmpty()) {
+					nomeOggetto = tNomeOggetto.getValue();
+				}
+				String descrizione = null;
+				if(!tDescrizione.getText().isEmpty()) {
+					descrizione = tDescrizione.getValue();
+				}
+				//String descrizione = tDescrizione.getValue();
+				Double prezzoBase = null;
+				if(!tPrezzoVendita.getText().isEmpty()) {
+					prezzoBase = Double.parseDouble(tPrezzoVendita.getValue());
+				}
+				//Double prezzoBase = Double.parseDouble(tPrezzoVendita.getValue());
 				Date dataFine = tScadenzaAsta.getValue();
 				String stato = "APERTA";
 				String vincitore = "Nessuno";
 				String nomeMigliore = "Nessuno";
 				String username = Session.getInstance().getSession().getUsername();
-				
-				
 				int index = lCategoria.getSelectedIndex();
 				String categoria = lCategoria.getValue(index);
 				
-				if(!nomeOggetto.isEmpty() && !descrizione.isEmpty() && 
-						prezzoBase != null && dataFine != null && !categoria.isEmpty()) {
+				if(!tNomeOggetto.getText().isEmpty() && !tDescrizione.getText().isEmpty() && 
+						!tPrezzoVendita.getText().isEmpty() && dataFine != null && !categoria.isEmpty()) {
 					
 					final Prodotto newProdotto = new Prodotto();
 					newProdotto.setNomeProdotto(nomeOggetto);
